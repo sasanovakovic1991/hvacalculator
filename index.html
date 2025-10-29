@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>Kalkulator grijanja • MVP PWA</title>
+<title>HVACALCULATOR • MVP PWA</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#1E90FF" />
 
@@ -45,9 +45,17 @@ body {
     justify-content: center;
 }
 
-.wrapper {
+/* APP SHELL (kontejner za sve stranice + navbar gore desno) */
+.app-shell {
+    position: relative;
     width: 100%;
     max-width: 1500px;
+    min-height: 100%;
+}
+
+/* WRAPPERS LAYOUT */
+.wrapper {
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 380px;
     gap: var(--gap-lg);
@@ -56,6 +64,129 @@ body {
     .wrapper { grid-template-columns: 1fr; }
 }
 
+/* SPLASH / HOME SCREEN */
+#splash {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, #1E90FF22 0%, #00000000 60%), var(--bg-dark);
+    color: var(--text-light);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    z-index:9999;
+    transition: opacity .6s ease, visibility .6s ease;
+    font-family: var(--font-stack);
+    padding:2rem 1rem;
+}
+#splash.hide {
+    opacity:0;
+    visibility:hidden;
+}
+.splash-logo {
+    width:80px;
+    height:80px;
+    border-radius:20px;
+    background: var(--blue-accent);
+    box-shadow:0 20px 60px rgba(30,144,255,.6);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:1.2rem;
+    color:#fff;
+    margin-bottom:1rem;
+}
+.splash-title {
+    font-size:1.4rem;
+    font-weight:600;
+    letter-spacing:.08em;
+    color:#fff;
+    text-shadow:0 0 20px rgba(30,144,255,.8);
+}
+.splash-sub {
+    margin-top:.5rem;
+    font-size:.8rem;
+    color:var(--text-dim);
+    max-width:260px;
+    line-height:1.4;
+    margin-bottom:2rem;
+}
+.splash-actions {
+    display:flex;
+    flex-direction:column;
+    gap:.75rem;
+    width:100%;
+    max-width:260px;
+}
+.splash-btn {
+    width:100%;
+    background: var(--card-dark);
+    border:1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-light);
+    font-size:.9rem;
+    font-weight:600;
+    padding:.9rem 1rem;
+    cursor:pointer;
+    line-height:1.2;
+    text-align:center;
+    transition: all .2s;
+}
+.splash-btn.primary {
+    background: var(--blue-accent);
+    border-color: var(--blue-accent);
+    color:#fff;
+    box-shadow:0 12px 30px rgba(30,144,255,.4);
+}
+.splash-btn:hover {
+    box-shadow:0 8px 20px rgba(0,0,0,.6);
+}
+.splash-btn.primary:hover {
+    box-shadow:0 16px 32px rgba(30,144,255,.55);
+}
+
+/* NAVBAR (tabs top-right inside app-shell) */
+.navbar {
+    position:absolute;
+    top:0;
+    right:0;
+    display:flex;
+    gap:.5rem;
+    flex-wrap:nowrap;
+    align-items:flex-start;
+    z-index:50;
+    transform:translate(-.5rem,.5rem);
+}
+@media(max-width:600px){
+    .navbar {
+        flex-wrap:wrap;
+        max-width:calc(100% - 2rem);
+        justify-content:flex-end;
+        transform:translate(-.5rem,.5rem);
+    }
+}
+.navbtn {
+    background: var(--card-dark);
+    border:1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-light);
+    font-size:.75rem;
+    font-weight:600;
+    padding:.5rem .7rem;
+    cursor:pointer;
+    line-height:1.2;
+    white-space:nowrap;
+}
+.navbtn.active {
+    background: var(--blue-accent);
+    border-color: var(--blue-accent);
+    color:#fff;
+    box-shadow:0 8px 20px rgba(30,144,255,.4);
+}
+
+/* TITLES */
 h1 {
     margin: 0 0 .25rem 0;
     font-size: clamp(1.2rem,1vw + 1rem,1.5rem);
@@ -66,7 +197,6 @@ h1 {
     gap: .5rem;
     flex-wrap: wrap;
 }
-
 h1 .badge {
     background: var(--red-warning);
     color: #fff;
@@ -77,6 +207,7 @@ h1 .badge {
     line-height: 1.2;
 }
 
+/* INTRO TEXT */
 .subtitle {
     color: var(--text-dim);
     font-size: .8rem;
@@ -84,7 +215,15 @@ h1 .badge {
     max-width: 75ch;
     line-height: 1.5;
 }
+.subtitle ol {
+    margin:0;
+    padding-left:1rem;
+}
+.subtitle li {
+    margin-bottom:.4rem;
+}
 
+/* CARD */
 .card {
     background: var(--card-dark);
     border: 1px solid var(--border);
@@ -93,7 +232,6 @@ h1 .badge {
     margin-bottom: var(--gap-lg);
     box-shadow: 0 4px 10px rgba(0,0,0,0.4);
 }
-
 .card h2 {
     color: var(--blue-accent);
     margin-top: 0;
@@ -107,9 +245,10 @@ h1 .badge {
     gap:.5rem;
 }
 
+/* GRIDS */
 .section-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(min(280px,100%),1fr));
+    grid-template-columns: repeat(auto-fit,minmax(min(260px,100%),1fr));
     gap: 1.25rem;
     margin-bottom: var(--gap-lg);
 }
@@ -119,6 +258,7 @@ h1 .badge {
     gap: var(--gap-md);
 }
 
+/* LABELS / INPUTS */
 label {
     font-size: .8rem;
     font-weight: 500;
@@ -137,6 +277,7 @@ label .hint {
 }
 
 input[type="number"],
+input[type="text"],
 select,
 textarea {
     width: 100%;
@@ -150,14 +291,17 @@ textarea {
     outline: none;
     font-family: var(--font-stack);
     transition: border-color .2s, box-shadow .2s;
+    min-width:0;
 }
 input[type="number"]:focus,
+input[type="text"]:focus,
 select:focus,
 textarea:focus {
     border-color: var(--blue-accent);
     box-shadow: 0 0 0 3px rgba(30,144,255,.3);
 }
 
+/* RESULTS SIDE */
 .results-card {
     position: sticky;
     top: 1rem;
@@ -167,7 +311,6 @@ textarea:focus {
     scrollbar-width: thin;
     scrollbar-color: var(--blue-accent) var(--anthracite-light);
 }
-
 .result-block {
     background: var(--bg-dark);
     border: 1px solid var(--border);
@@ -175,7 +318,6 @@ textarea:focus {
     padding: var(--gap-md);
     margin-bottom: var(--gap-md);
 }
-
 .result-label {
     color: var(--text-dim);
     font-size: .7rem;
@@ -209,7 +351,6 @@ textarea:focus {
     line-height: 1.4;
     color: var(--text-dim);
 }
-
 .footer-note {
     color: var(--text-dim);
     font-size: .7rem;
@@ -218,12 +359,12 @@ textarea:focus {
     border-top: 1px solid var(--border);
     padding-top: var(--gap-md);
 }
-
 #warnMsg {
     color: var(--red-warning);
     font-weight:600;
 }
 
+/* TABLE IN RESULTS */
 table.pricing-table {
     border-collapse: collapse;
     width: 100%;
@@ -247,11 +388,7 @@ table.pricing-table td strong{
     font-weight:600;
 }
 
-.hidden-input {
-    display: none;
-}
-
-/* Report / PDF look */
+/* REPORT / PDF LOOK */
 .report-title{
     color:var(--text-dim);
     font-size:.7rem;
@@ -272,7 +409,7 @@ table.pricing-table td strong{
     line-height: 1.45;
 }
 
-/* CTA button */
+/* BUTTONS */
 .btn-primary {
     display: inline-block;
     width: 100%;
@@ -293,12 +430,69 @@ table.pricing-table td strong{
     background:#4A90E2;
 }
 
+.flexcol {
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+}
+
+/* DEVICE DB TABLE */
+.db-controls {
+    display:flex;
+    flex-wrap:wrap;
+    gap:1rem;
+    align-items:flex-end;
+}
+.db-table-wrap {
+    overflow-x:auto;
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    background:var(--card-dark);
+    box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+.db-table {
+    border-collapse:collapse;
+    min-width:600px;
+    width:100%;
+    font-size:.8rem;
+}
+.db-table th {
+    text-align:left;
+    font-weight:600;
+    color:var(--text-light);
+    border-bottom:1px solid var(--border);
+    padding:.5rem .75rem;
+    white-space:nowrap;
+}
+.db-table td {
+    color:var(--text-dim);
+    border-bottom:1px solid rgba(82,90,102,.4);
+    padding:.5rem .75rem;
+    vertical-align:top;
+    white-space:nowrap;
+}
+.db-table td strong {
+    color:var(--text-light);
+    font-weight:600;
+}
+
+/* HIDING HELPERS */
+.hidden-input {
+    display: none;
+}
+
 /* print tweaks */
 @media print {
     body {
         background:#fff;
         color:#000;
         padding:0;
+    }
+    #splash,
+    .navbar,
+    #deviceDBWrapper,
+    #calcTab .subtitle {
+        display:none !important;
     }
     .wrapper {
         display:block;
@@ -315,9 +509,7 @@ table.pricing-table td strong{
         border:1px solid #000 !important;
         box-shadow:none !important;
     }
-    .btn-primary,
-    header,
-    nav {
+    .btn-primary {
         display:none !important;
     }
     .results-card {
@@ -325,7 +517,8 @@ table.pricing-table td strong{
         max-height:none;
         overflow:visible;
     }
-    .hidden-input {
+    /* pokaži report tek u printu */
+    .hidden-input.print-show {
         display:block !important;
     }
 }
@@ -333,488 +526,644 @@ table.pricing-table td strong{
 </head>
 <body>
 
-<div class="wrapper">
+<!-- SPLASH (početni ekran) -->
+<div id="splash">
+    <div class="splash-logo">HVAC</div>
+    <div class="splash-title">HVACALCULATOR</div>
+    <div class="splash-sub">
+        Pametan proračun grijanja, PTV-a i troška.
+        Odaberi što želiš raditi.
+    </div>
 
-    <main>
-        <h1>
-            Kalkulator grijanja / pufera / PTV
-            <span class="badge">PWA MVP</span>
-        </h1>
-
-        <div class="subtitle">
-            1) Opis objekta → 2) Sustav grijanja → desno dobiješ:
-            snagu grijanja (kW), preporuku uređaja, pufer, ekspanziju,
-            protok pumpe, godišnji trošak po energentu, potrošnju drva,
-            broj krugova podnog, snagu radijatora, PTV spremnik, te gotov
-            izvještaj za kupca (sa objašnjenjem metodologije i utjecaja fasade/stolarije).
-            <br/>Nakon unosa samo stisni “PDF/Ispis”.
-        </div>
-
-        <!-- STEP 1: OBJEKT -->
-        <section class="card">
-            <h2>
-                1. Objekt / Kuća / Stan / Hala
-                <span style="color:var(--text-dim);font-size:.7rem;font-weight:400;">Toplinski gubici</span>
-            </h2>
-
-            <div class="section-grid">
-
-                <div>
-                    <label>Tip objekta
-                        <span class="hint">važno za gubitke</span>
-                    </label>
-                    <select id="buildingType">
-                        <option value="house" selected>Kuća (samostojeća)</option>
-                        <option value="apartment">Stan (srednji kat)</option>
-                        <option value="hall">Poslovna hala / radionica</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label>Grijana površina (m²)
-                        <span class="hint">unutarnja</span>
-                    </label>
-                    <input type="number" id="area" value="150" min="20" step="1">
-                </div>
-
-                <div>
-                    <label>Visina prostora (m)
-                        <span class="hint">prosjek</span>
-                    </label>
-                    <input type="number" id="height" value="2.6" min="2" step="0.1">
-                </div>
-
-                <div>
-                    <label>Fasada / izolacija krova
-                        <span class="hint">debljina termo omota</span>
-                    </label>
-                    <select id="insulation">
-                        <option value="low" data-need-per-m2="140">
-                            Loše / stara kuća (malo ili ništa izolacije)
-                        </option>
-                        <option value="medium" data-need-per-m2="100" selected>
-                            Srednje (~8-10 cm fasade EPS / vuna)
-                        </option>
-                        <option value="good" data-need-per-m2="60">
-                            Dobro (~12-15 cm grafitni EPS / kvalitetna fasada)
-                        </option>
-                        <option value="high" data-need-per-m2="40">
-                            Niskoenergetski (15+ cm, riješeni mostovi)
-                        </option>
-                    </select>
-                </div>
-
-                <div>
-                    <label>Stolarija / prozori
-                        <span class="hint">tip prozora</span>
-                    </label>
-                    <select id="windows">
-                        <option value="old">Stara drvena / Alu bez prekida / jednostruko</option>
-                        <option value="double" selected>PVC / ALU dvostruko IZO (Veka / Salamander / Rehau)</option>
-                        <option value="triple">Troslojno IZO low-e (Rehau Geneo, Schüco, Alumil Supreme)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label>Klimatska zona / projektna vanjska
-                        <span class="hint">°C najhladnije</span>
-                    </label>
-                    <select id="climate">
-                        <option value="-2">Primorje (Split/Rijeka ~ -2 °C)</option>
-                        <option value="-5">J. Dalmacija (~ -5 °C)</option>
-                        <option value="-10" selected>Zagreb / Slavonija (~ -10 °C)</option>
-                        <option value="-12">Varaždin / Sisak (~ -12 °C)</option>
-                        <option value="-15">Lika / Gorski kotar (~ -15 °C)</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label>Željena temperatura u prostoru (°C)
-                        <span class="hint">standard ~21 °C dnevni boravak</span>
-                    </label>
-                    <input type="number" id="roomTemp" value="21" min="18" max="25" step="0.5">
-                </div>
-
-                <div>
-                    <label>Broj ljudi u objektu
-                        <span class="hint">za PTV</span>
-                    </label>
-                    <input type="number" id="numPeople" value="4" min="1" step="1">
-                </div>
-
-            </div>
-        </section>
-
-        <!-- STEP 2: SUSTAV GRIJANJA -->
-        <section class="card">
-            <h2>
-                2. Sustav grijanja
-                <span style="color:var(--text-dim);font-size:.7rem;font-weight:400;">emiterski sustav + izvor topline</span>
-            </h2>
-
-            <div class="section-grid">
-
-                <div>
-                    <label>Tip izvora topline
-                        <span class="hint">glavni izvor</span>
-                    </label>
-                    <select id="heatSource">
-                        <option value="hp" selected>Dizalica topline</option>
-                        <option value="pellet">Kotao na pelete</option>
-                        <option value="wood">Kotao na drva / kruto gorivo</option>
-                        <option value="gas">Plinski kondenzacijski kotao</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label>Distribucija grijanja
-                        <span class="hint">emiterski sustav</span>
-                    </label>
-                    <select id="emitter">
-                        <option value="floor" selected>Podno grijanje</option>
-                        <option value="rads">Radijatori</option>
-                        <option value="mix">Podno + Radijatori</option>
-                    </select>
-                </div>
-
-                <div id="floorPipeDiameterDiv">
-                    <label>Promjer podnog grijanja
-                        <span class="hint">vanjski ∅</span>
-                    </label>
-                    <select id="pipeDia">
-                        <option value="16" selected>Ø16 mm (najčešće)</option>
-                        <option value="17">Ø17 mm</option>
-                        <option value="20">Ø20 mm</option>
-                    </select>
-                </div>
-
-                <div id="floorPipeLengthDiv">
-                    <label>Dužina podnog grijanja (m)
-                        <span class="hint">~1000-1200 m za 150 m²</span>
-                    </label>
-                    <input type="number" id="floorLen" value="1200" min="0" step="10">
-                </div>
-
-                <div id="radVolumeDiv" class="hidden-input">
-                    <label>Volumen radijatorskog sustava (L)
-                        <span class="hint">0 = auto procjena</span>
-                    </label>
-                    <input type="number" id="radVol" value="0" min="0" step="5">
-                </div>
-
-                <div>
-                    <label>Radna temperatura polaza (°C)
-                        <span class="hint">podno ~35, radijatori ~50-70</span>
-                    </label>
-                    <input type="number" id="flowTemp" value="35" min="25" max="80" step="1">
-                </div>
-
-                <div>
-                    <label>PTV spremnik / bojler
-                        <span class="hint">topla sanitarna voda</span>
-                    </label>
-                    <select id="dhwTank">
-                        <option value="none" selected>Bez spremnika PTV</option>
-                        <option value="80">Kombinirani 80 L (ugr. grijač)</option>
-                        <option value="100">Kombinirani 100 L (ugr. grijač)</option>
-                        <option value="120">Kombinirani 120 L (ugr. grijač)</option>
-                        <option value="160">Spremnik 160 L</option>
-                        <option value="200">Spremnik 200 L</option>
-                        <option value="300">Spremnik 300 L</option>
-                        <option value="500">Spremnik 500 L</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label>Grijati PTV zimskim izvorom?
-                        <span class="hint">ne samo struja</span>
-                    </label>
-                    <select id="dhwFromHeating">
-                        <option value="no" selected>Ne, PTV ide samo na struju</option>
-                        <option value="yes">Da, spojiti PTV na izvor grijanja</option>
-                    </select>
-                </div>
-
-            </div>
-
-            <div class="two-col small-note">
-                <div>
-                    • Veći pufer = manje paljenja izvora i dulji vijek.
-                    <br>• Kod drva veliki pufer je sigurnost i akumulacija.
-                    <br>• Podno već ima “akumulaciju estriha”, često dosta mali tehnički pufer 100-200 L.
-                </div>
-                <div>
-                    • Ekspanzijska posuda mora pokriti širenje vode (~8-10%).<br>
-                    • Protok pumpe vezan uz kW i ΔT.<br>
-                    • PTV spremnik mora odgovarati broju ljudi (udobnost tuširanja).
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- DESNA STRANA: REZULTATI -->
-    <aside class="card results-card">
-        <h2>Rezultati proračuna
-            <span id="warnMsg" style="font-size:.7rem;"></span>
-        </h2>
-
-        <!-- Snaga grijanja -->
-        <div class="result-block">
-            <div class="result-label">Potrebna snaga grijanja kuće (design load)</div>
-            <div class="result-value">
-                <span id="heatLoadKW">-</span><span class="unit">kW</span>
-            </div>
-            <div class="small-note">
-                Snaga potrebna da se održi zadana sobna temperatura pri najhladnijem projektnom danu.
-            </div>
-        </div>
-
-        <!-- Snaga uređaja -->
-        <div class="result-block">
-            <div class="result-label">Preporučena nazivna snaga uređaja (+PTV + rezerva)</div>
-            <table class="pricing-table">
-                <tr>
-                    <th>Izvor</th>
-                    <th>Predloži</th>
-                </tr>
-                <tr>
-                    <td>Dizalica topline</td>
-                    <td><strong id="recHP">-</strong> kW</td>
-                </tr>
-                <tr>
-                    <td>Kotao na drva</td>
-                    <td><strong id="recWood">-</strong> kW</td>
-                </tr>
-                <tr>
-                    <td>Kotao na pelete</td>
-                    <td><strong id="recPellet">-</strong> kW</td>
-                </tr>
-                <tr>
-                    <td>Plinski kondenzacijski</td>
-                    <td><strong id="recGas">-</strong> kW</td>
-                </tr>
-            </table>
-            <div class="small-note">
-                Uračunato: grijanje prostora, punjenje PTV spremnika i sigurnosna rezerva (~15%).
-            </div>
-        </div>
-
-        <!-- Voda + pufer -->
-        <div class="result-block">
-            <div class="result-label">Ukupan volumen vode u sustavu</div>
-            <div class="result-value">
-                <span id="waterVol">-</span><span class="unit">L</span>
-            </div>
-            <div class="small-note">
-                Podno + radijatori + glavne cijevi. To diktira ekspanzijsku posudu.
-            </div>
-        </div>
-
-        <div class="result-block">
-            <div class="result-label">Minimalni pufer (stabilan rad izvora)</div>
-            <div class="result-value">
-                <span id="puferMin">-</span><span class="unit">L</span>
-            </div>
-            <div class="small-note">
-                Tehnički pufer / hidraulička skretnica da izvor ne "škljoca".
-            </div>
-        </div>
-
-        <div class="result-block">
-            <div class="result-label">Akumulacijski pufer (dulji rad bez paljenja)</div>
-            <div class="result-value">
-                <span id="puferStorage">-</span><span class="unit">L</span>
-            </div>
-            <div class="small-note">
-                Kod drva se cilja OGROMNA akumulacija (50-80 L/kW).
-            </div>
-        </div>
-
-        <!-- Ekspanzija -->
-        <div class="result-block">
-            <div class="result-label">Preporučeni volumen ekspanzijske posude</div>
-            <div class="result-value">
-                <span id="expansionLiters">-</span>
-                <span class="unit">L (zaokruži na veću komercijalnu)</span>
-            </div>
-        </div>
-
-        <!-- Podno krugovi -->
-        <div id="floorLoopsBlock" class="result-block">
-            <div class="result-label">Podno grijanje – broj krugova</div>
-            <div class="result-value">
-                <span id="floorLoops">-</span>
-                <span class="unit">krugova (~100 m max po krugu)</span>
-            </div>
-            <div class="small-note">
-                Plan razdjelnika i ormarića (8 / 10 / 12 krugova ...).
-            </div>
-        </div>
-
-        <!-- Radijatori snaga -->
-        <div id="radsTotalKWBlock" class="result-block hidden-input">
-            <div class="result-label">Radijatorsko grijanje – ukupna potrebna deklarirana snaga</div>
-            <div class="result-value">
-                <span id="radsTotalKW">-</span>
-                <span class="unit">kW radijatora @ zadanoj T polaza</span>
-            </div>
-            <div class="small-note">
-                Niža polazna temperatura = slabiji radijator → treba veća površina.
-            </div>
-        </div>
-
-        <!-- PTV -->
-        <div class="result-block">
-            <div class="result-label">PTV spremnik (topla voda)</div>
-            <div class="result-value" style="flex-direction:column;align-items:flex-start;">
-                <div>Prepor. volumen za ljude: <strong id="dhwVolRec">-</strong> L</div>
-                <div>Spirala (ako je spojeno na grijanje): <span id="dhwCoilArea">-</span> m²</div>
-                <div>El. grijač / backup: <span id="dhwHeaterKW">-</span> kW</div>
-            </div>
-            <div class="small-note">
-                Ljudi: <span id="dhwPeopleNote">-</span>
-            </div>
-        </div>
-
-        <!-- Trošak grijanja -->
-        <div class="result-block">
-            <div class="result-label">Godišnji trošak grijanja prostora + PTV (procjena)</div>
-            <table class="pricing-table">
-                <tr>
-                    <th>Energent</th>
-                    <th>Ulazna energija/god</th>
-                    <th>€/god</th>
-                </tr>
-                <tr id="rowHP">
-                    <td>Dizalica topline (struja)</td>
-                    <td><strong id="yearHPkWh">-</strong> kWh el.</td>
-                    <td><strong id="yearHPcost">-</strong> €</td>
-                </tr>
-                <tr id="rowGAS">
-                    <td>Plin</td>
-                    <td><strong id="yearGASKWh">-</strong> kWh plina</td>
-                    <td><strong id="yearGAScost">-</strong> €</td>
-                </tr>
-                <tr id="rowPELLET">
-                    <td>Peleti</td>
-                    <td><strong id="yearPELLETkWh">-</strong> kWh peleta</td>
-                    <td><strong id="yearPELLETcost">-</strong> €</td>
-                </tr>
-                <tr id="rowWOOD">
-                    <td>Drva</td>
-                    <td><strong id="yearWOODkWh">-</strong> kWh drva</td>
-                    <td><strong id="yearWOODcost">-</strong> €</td>
-                </tr>
-            </table>
-            <div class="small-note">
-                Uključena procjena PTV struje i cijena drva (sječka/rezanje/dostava).
-            </div>
-        </div>
-
-        <!-- REPORT ZA KUPCAn -->
-        <div class="result-block">
-            <div class="report-title">IZVJEŠTAJ ZA KUPCA (A4)</div>
-            <div id="clientReport" class="report-block">
-                --
-            </div>
-            <div class="small-note" style="color:var(--red-warning);font-weight:600;">
-                OVO NIJE OVJERENI PROJEKT INSTALACIJA.
-                Ovo je radna orijentacija snage izvora, pufera, PTV-a, potrošnje i troška.
-            </div>
-        </div>
-
-        <button id="pdfExportBtn" class="btn-primary" onclick="window.print()">
-            💾 PDF / Ispis specifikacije
-        </button>
-
-        <div class="footer-note">
-            Ako je “Akumulacijski pufer” puno veći od “Minimalni pufer” → tipično za drva.
-            Kod dizalice topline + podno često je dosta samo tehnički pufer 100-200 L.
-        </div>
-
-    </aside>
-
+    <div class="splash-actions">
+        <button class="splash-btn primary" id="enterCalculatorBtn">➜ Kalkulator</button>
+        <button class="splash-btn" id="enterDBBtn">📚 Baza uređaja</button>
+    </div>
 </div>
 
+<!-- APP SHELL = navbar gore desno + sadržaj -->
+<div class="app-shell">
+
+    <!-- NAVBAR u gornjem desnom kutu -->
+    <div class="navbar hidden-input" id="tabBar">
+        <button class="navbtn active" id="btnCalcTab">Kalkulator</button>
+        <button class="navbtn" id="btnDBTab">Baza uređaja</button>
+    </div>
+
+    <!-- KALKULATOR WRAPPER -->
+    <div class="wrapper hidden-input" id="calcWrapper" style="opacity:0;transition:opacity .3s ease;">
+
+        <!-- LIJEVO: INPUTI -->
+        <main id="calcTab">
+
+            <h1>
+                Kalkulator grijanja / pufera / PTV
+                <span class="badge">PWA MVP</span>
+            </h1>
+
+            <div class="subtitle">
+                <ol>
+                    <li><strong>Korak 1: Objekt</strong> – odaberi broj etaža, pa unesi kvadraturu i visinu svake etaže, izolaciju, stolariju, klimu i željenu unutarnju temperaturu. Broj ljudi zbog PTV-a.</li>
+                    <li><strong>Korak 2: Sustav grijanja</strong> – izaberi izvor topline (dizalica / pelet / drva / plin / električni), tip emitera, broj krugova podnog, spremnik PTV-a. Ako je izvor dizalica/pelet/drva, dobit ćeš i pufer.</li>
+                    <li><strong>Snaga uređaja</strong> – po defaultu dobiješ prijedlog kW, ali možeš ručno promijeniti. Ta snaga se koristi za pufer i potrošnju.</li>
+                    <li><strong>Cijene energenata</strong> – možeš upisati realne cijene struje, plina, peleta i drva po m³.</li>
+                    <li><strong>PDF izvještaj</strong> – upiši podatke kupca i klikni “PDF / Ispis specifikacije”. Izvještaj se pripremi za print kao A4 i u njemu piše metodologija, snage, pufer, trošak godišnje itd.</li>
+                </ol>
+            </div>
+
+            <!-- STEP 1: OBJEKT -->
+            <section class="card">
+                <h2>
+                    1. Objekt / Kuća / Stan / Hala
+                    <span style="color:var(--text-dim);font-size:.7rem;font-weight:400;">Toplinski gubici po volumenu</span>
+                </h2>
+
+                <div class="section-grid">
+                    <div>
+                        <label>Tip objekta
+                            <span class="hint">utječe na gubitke</span>
+                        </label>
+                        <select id="buildingType">
+                            <option value="house" selected>Kuća (samostojeća)</option>
+                            <option value="apartment">Stan (srednji kat)</option>
+                            <option value="hall">Poslovna hala / radionica</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Broj etaža
+                            <span class="hint">max 4</span>
+                        </label>
+                        <select id="numFloors">
+                            <option value="1" selected>1 etaža</option>
+                            <option value="2">2 etaže</option>
+                            <option value="3">3 etaže</option>
+                            <option value="4">4 etaže</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Fasada / izolacija krova
+                            <span class="hint">debljina termo omota</span>
+                        </label>
+                        <select id="insulation">
+                            <option value="low" data-need-per-m2="140">Loše / stara kuća (malo ili ništa izolacije)</option>
+                            <option value="medium" data-need-per-m2="100" selected>Srednje (~8-10 cm fasade EPS / vuna)</option>
+                            <option value="good" data-need-per-m2="60">Dobro (~12-15 cm grafitni EPS / kvalitetna fasada)</option>
+                            <option value="high" data-need-per-m2="40">Niskoenergetski (15+ cm, riješeni mostovi)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Stolarija / prozori
+                            <span class="hint">propusnost</span>
+                        </label>
+                        <select id="windows">
+                            <option value="old">Stara drvena / Alu bez prekida / jednostruko</option>
+                            <option value="double" selected>PVC / ALU dvostruko IZO</option>
+                            <option value="triple">Troslojno IZO low-e (top izvedba)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Klimatska zona / projektna vanjska
+                            <span class="hint">°C najhladnije</span>
+                        </label>
+                        <select id="climate">
+                            <option value="-2">Primorje (~ -2 °C)</option>
+                            <option value="-5">J. Dalmacija (~ -5 °C)</option>
+                            <option value="-10" selected>Zagreb / Slavonija (~ -10 °C)</option>
+                            <option value="-12">Varaždin / Sisak (~ -12 °C)</option>
+                            <option value="-15">Lika / Gorski kotar (~ -15 °C)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Željena temperatura u prostoru (°C)
+                            <span class="hint">npr. 21</span>
+                        </label>
+                        <input type="number" id="roomTemp" value="21" min="18" max="25" step="0.5">
+                    </div>
+
+                    <div>
+                        <label>Broj ljudi u objektu
+                            <span class="hint">za PTV</span>
+                        </label>
+                        <input type="number" id="numPeople" value="4" min="1" step="1">
+                    </div>
+                </div>
+
+                <!-- ETAŽE DINAMIČKI -->
+                <div id="floorsContainer" class="section-grid"></div>
+            </section>
+
+            <!-- STEP 2: GRIJANJE & PTV -->
+            <section class="card">
+                <h2>
+                    2. Sustav grijanja
+                    <span style="color:var(--text-dim);font-size:.7rem;font-weight:400;">emiterski sustav + izvor topline</span>
+                </h2>
+
+                <div class="section-grid">
+
+                    <div>
+                        <label>Tip izvora topline
+                            <span class="hint">glavni izvor</span>
+                        </label>
+                        <select id="heatSource">
+                            <option value="hp" selected>Dizalica topline</option>
+                            <option value="pellet">Kotao na pelete</option>
+                            <option value="wood">Kotao na drva / kruto gorivo</option>
+                            <option value="gas">Plinski kondenzacijski kotao</option>
+                            <option value="elec">Električni kotao</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Nazivna snaga uređaja (kW)
+                            <span class="hint">preporuka se automatski upiše</span>
+                        </label>
+                        <input type="number" id="deviceKWInput" value="0" min="1" step="0.1">
+                    </div>
+
+                    <div>
+                        <label>Distribucija grijanja
+                            <span class="hint">emiterski sustav</span>
+                        </label>
+                        <select id="emitter">
+                            <option value="floor" selected>Podno grijanje</option>
+                            <option value="rads">Radijatori</option>
+                            <option value="mix">Podno + Radijatori</option>
+                        </select>
+                    </div>
+
+                    <div id="floorLoopsDiv">
+                        <label>Broj krugova podnog grijanja
+                            <span class="hint">1 krug ~100 m cijevi</span>
+                        </label>
+                        <input type="number" id="floorLoopsInput" value="10" min="0" step="1">
+                    </div>
+
+                    <div id="pipeDiaDiv">
+                        <label>Promjer podnog grijanja
+                            <span class="hint">vanjski ∅</span>
+                        </label>
+                        <select id="pipeDia">
+                            <option value="16" selected>Ø16 mm (najčešće)</option>
+                            <option value="17">Ø17 mm</option>
+                            <option value="20">Ø20 mm</option>
+                        </select>
+                    </div>
+
+                    <div id="radVolumeDiv" class="hidden-input">
+                        <label>Volumen radijatorskog sustava (L)
+                            <span class="hint">0 = auto procjena</span>
+                        </label>
+                        <input type="number" id="radVol" value="0" min="0" step="5">
+                    </div>
+
+                    <div>
+                        <label>Radna temperatura polaza (°C)
+                            <span class="hint">auto po tipu emitera</span>
+                        </label>
+                        <input type="number" id="flowTemp" value="35" min="25" max="80" step="1">
+                    </div>
+
+                    <div>
+                        <label>PTV spremnik / bojler
+                            <span class="hint">sanitarna voda</span>
+                        </label>
+                        <select id="dhwTank">
+                            <option value="none" selected>Bez spremnika PTV</option>
+                            <option value="80">Kombinirani 80 L</option>
+                            <option value="100">Kombinirani 100 L</option>
+                            <option value="120">Kombinirani 120 L</option>
+                            <option value="160">Spremnik 160 L</option>
+                            <option value="200">Spremnik 200 L</option>
+                            <option value="300">Spremnik 300 L</option>
+                            <option value="500">Spremnik 500 L</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Grijati PTV zimskim izvorom?
+                            <span class="hint">ne samo struja</span>
+                        </label>
+                        <select id="dhwFromHeating">
+                            <option value="no" selected>Ne, PTV ide samo na struju</option>
+                            <option value="yes">Da, spojiti PTV na izvor grijanja</option>
+                        </select>
+                    </div>
+
+                    <!-- PUFERSKI SPREMNIK (samo za hp/pellet/wood) -->
+                    <div id="bufferWrapper" class="hidden-input">
+                        <label>Pufer spremnik (L)
+                            <span class="hint">stabilnost / akumulacija</span>
+                        </label>
+                        <select id="bufferTank">
+                            <option value="30">30 L</option>
+                            <option value="50">50 L</option>
+                            <option value="100">100 L</option>
+                            <option value="200">200 L</option>
+                            <option value="300">300 L</option>
+                            <option value="500">500 L</option>
+                            <option value="800">800 L</option>
+                            <option value="1000">1000 L</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="two-col small-note">
+                    <div>
+                        • Veći pufer = manje paljenja izvora i dulji vijek.<br>
+                        • Kod drva veliki pufer je sigurnost + akumulacija → manje loženja kroz dan.<br>
+                        • Podno ima masu estriha pa često je dovoljan manji tehnički pufer (~100-200 L) uz dizalicu.
+                    </div>
+                    <div>
+                        • Ekspanzijska posuda mora pokriti širenje (~8-10% ukupne vode).<br>
+                        • Niži polaz (35 °C podno) = bolji COP dizalice = manja struja po kWh topline.<br>
+                        • Kad ručno promijeniš snagu uređaja (kW), ta snaga ulazi u pufer i sezonsku analizu.
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 3: CIJENE + KUPAC -->
+            <section class="card">
+                <h2>
+                    3. Cijene energenata & Podaci kupca
+                    <span style="color:var(--text-dim);font-size:.7rem;font-weight:400;">za realan trošak i ispis</span>
+                </h2>
+
+                <div class="section-grid">
+                    <div>
+                        <label>Cijena struje (€/kWh)
+                            <span class="hint">s PDV-om</span>
+                        </label>
+                        <input type="number" id="priceEl" value="0.15" min="0" step="0.001">
+                    </div>
+
+                    <div>
+                        <label>Cijena plina (€/kWh)</label>
+                        <input type="number" id="priceGas" value="0.076" min="0" step="0.001">
+                    </div>
+
+                    <div>
+                        <label>Cijena peleta (€/kWh)</label>
+                        <input type="number" id="pricePellet" value="0.065" min="0" step="0.001">
+                    </div>
+
+                    <div>
+                        <label>Cijena drva (€/m³)
+                            <span class="hint">suha bukva/grab s dostavom</span>
+                        </label>
+                        <input type="number" id="priceWoodM3" value="120" min="0" step="1">
+                    </div>
+
+                    <div>
+                        <label>Ime i prezime kupca</label>
+                        <input type="text" id="custName" placeholder="Ime i prezime">
+                    </div>
+
+                    <div>
+                        <label>Adresa objekta</label>
+                        <input type="text" id="custAddr" placeholder="Ulica i grad">
+                    </div>
+
+                    <div>
+                        <label>Kontakt</label>
+                        <input type="text" id="custContact" placeholder="099... / email...">
+                    </div>
+                </div>
+
+                <div class="small-note">
+                    Ove cijene ulaze direktno u godišnji trošak grijanja prostora i PTV.
+                    U izvještaju pišemo koje cijene su korištene.
+                </div>
+            </section>
+        </main>
+
+        <!-- DESNO: REZULTATI -->
+        <aside class="card results-card" id="resultsSide">
+            <h2>Rezultati proračuna
+                <span id="warnMsg" style="font-size:.7rem;"></span>
+            </h2>
+
+            <!-- Snaga grijanja -->
+            <div class="result-block">
+                <div class="result-label">Potrebna snaga grijanja kuće (design load)</div>
+                <div class="result-value">
+                    <span id="heatLoadKW">-</span><span class="unit">kW</span>
+                </div>
+                <div class="small-note">
+                    Snaga potrebna da se održi zadana sobna temperatura pri najhladnijem projektnom danu (gubici ovojnice + stolarija).
+                    Gubici ventilacijom/provjetravanjem postoje dodatno, zato se preporučuje rezerva.
+                </div>
+            </div>
+
+            <!-- Snaga uređaja -->
+            <div class="result-block">
+                <div class="result-label">Preporučena nazivna snaga uređaja (+PTV + rezerva)</div>
+                <table class="pricing-table">
+                    <tr>
+                        <th>Izvor</th>
+                        <th>Predloži</th>
+                    </tr>
+                    <tr><td>Dizalica topline</td><td><strong id="recHP">-</strong> kW</td></tr>
+                    <tr><td>Kotao na drva</td><td><strong id="recWood">-</strong> kW</td></tr>
+                    <tr><td>Kotao na pelete</td><td><strong id="recPellet">-</strong> kW</td></tr>
+                    <tr><td>Plinski kondenzacijski</td><td><strong id="recGas">-</strong> kW</td></tr>
+                    <tr><td>Električni kotao</td><td><strong id="recElec">-</strong> kW</td></tr>
+                </table>
+                <div class="small-note">
+                    Ovo je prijedlog. Snaga koju si ručno postavio koristi se u puferu i trošku.
+                </div>
+            </div>
+
+            <!-- Pufer -->
+            <div class="result-block" id="bufferInfoBlock">
+                <div class="result-label">Pufer i akumulacija</div>
+                <div class="result-value" style="flex-direction:column;align-items:flex-start;">
+                    <div>Minimalno preporučeno: <strong id="puferMinCalc">-</strong> L</div>
+                    <div>Odabrani pufer: <strong id="puferChosen">-</strong> L</div>
+                    <div>Akumulacijski cilj (drva/pelet): <span id="puferStorageTarget">-</span> L</div>
+                </div>
+                <div class="small-note">
+                    Veliki pufer = rjeđe paljenje izvora, stabilnija temperatura, bolja iskoristivost drva/peleta
+                    i manje “taktiranja” dizalice topline.
+                </div>
+            </div>
+
+            <!-- Voda + ekspanzija -->
+            <div class="result-block">
+                <div class="result-label">Ukupan volumen vode u sustavu</div>
+                <div class="result-value">
+                    <span id="waterVol">-</span><span class="unit">L</span>
+                </div>
+                <div class="small-note">
+                    Podno + radijatori + glavne cijevi + pufer (+ dio PTV ako je spojen).
+                </div>
+            </div>
+
+            <div class="result-block">
+                <div class="result-label">Preporučeni volumen ekspanzijske posude</div>
+                <div class="result-value">
+                    <span id="expansionLiters">-</span>
+                    <span class="unit">L (zaokruži na veću komercijalnu)</span>
+                </div>
+            </div>
+
+            <!-- Podno krugovi -->
+            <div id="floorLoopsBlock" class="result-block">
+                <div class="result-label">Podno grijanje – broj krugova</div>
+                <div class="result-value">
+                    <span id="floorLoops">-</span>
+                    <span class="unit">krugova (~100 m po krugu)</span>
+                </div>
+                <div class="small-note">
+                    Orijentacija za razdjelnik i ormarić (8 / 10 / 12 krugova ...).
+                </div>
+            </div>
+
+            <!-- Radijatori -->
+            <div id="radsTotalKWBlock" class="result-block hidden-input">
+                <div class="result-label">Radijatorsko grijanje – ukupna potrebna deklarirana snaga</div>
+                <div class="result-value">
+                    <span id="radsTotalKW">-</span>
+                    <span class="unit">kW radijatora @ zadanoj T polaza</span>
+                </div>
+                <div class="small-note">
+                    Niža polazna temperatura = slabiji radijator → treba veća površina.
+                </div>
+            </div>
+
+            <!-- PTV -->
+            <div class="result-block">
+                <div class="result-label">PTV spremnik (topla voda)</div>
+                <div class="result-value" style="flex-direction:column;align-items:flex-start;">
+                    <div>Prepor. volumen za ljude: <strong id="dhwVolRec">-</strong> L</div>
+                    <div>Spirala (ako grijanje puni PTV): <span id="dhwCoilArea">-</span> m²</div>
+                    <div>El. grijač / backup: <span id="dhwHeaterKW">-</span> kW</div>
+                </div>
+                <div class="small-note">
+                    Ljudi: <span id="dhwPeopleNote">-</span>
+                </div>
+            </div>
+
+            <!-- TROŠKOVI GODIŠNJE -->
+            <div class="result-block">
+                <div class="result-label">Godišnji trošak grijanja prostora + PTV (procjena)</div>
+                <table class="pricing-table">
+                    <tr><th>Energent</th><th>Ulazna energija/god</th><th>€/god</th></tr>
+                    <tr id="rowHP">
+                        <td>Dizalica topline (struja)</td>
+                        <td><strong id="yearHPkWh">-</strong> kWh el.</td>
+                        <td><strong id="yearHPcost">-</strong> €</td>
+                    </tr>
+                    <tr id="rowGAS">
+                        <td>Plin</td>
+                        <td><strong id="yearGASKWh">-</strong> kWh plina</td>
+                        <td><strong id="yearGAScost">-</strong> €</td>
+                    </tr>
+                    <tr id="rowPELLET">
+                        <td>Peleti</td>
+                        <td><strong id="yearPELLETkWh">-</strong> kWh peleta</td>
+                        <td><strong id="yearPELLETcost">-</strong> €</td>
+                    </tr>
+                    <tr id="rowWOOD">
+                        <td>Drva</td>
+                        <td><strong id="yearWOODkWh">-</strong> kWh drva</td>
+                        <td><strong id="yearWOODcost">-</strong> €</td>
+                    </tr>
+                    <tr id="rowELEC">
+                        <td>Električni kotao (struja)</td>
+                        <td><strong id="yearELECKWh">-</strong> kWh el.</td>
+                        <td><strong id="yearELECcost">-</strong> €</td>
+                    </tr>
+                </table>
+                <div class="small-note">
+                    Učinkovitost i cijena uključuju i PTV. Cijene energenata su one koje si gore unio.
+                    Pufer i niži polaz dizalice mogu poboljšati sezonski COP → manja struja po kWh topline.
+                </div>
+            </div>
+
+            <!-- REPORT ZA PRINT -->
+            <div class="result-block hidden-input print-show">
+                <div class="report-title">IZVJEŠTAJ ZA KUPCA (A4)</div>
+                <div id="clientReport" class="report-block">--</div>
+                <div class="small-note" style="color:var(--red-warning);font-weight:600;">
+                    OVO NIJE OVJERENI PROJEKT INSTALACIJA.
+                    Ovo je radna orijentacija snage izvora, pufera, PTV-a, potrošnje i troška.
+                </div>
+            </div>
+
+            <button id="pdfExportBtn" class="btn-primary">
+                💾 PDF / Ispis specifikacije
+            </button>
+
+            <div class="footer-note">
+                Pufer kod krutog goriva omogućuje da kotao radi punom snagom, napuni toplinu,
+                a kuća se grije iz spremnika. Kod dizalice topline i podnog grijanja,
+                i manji pufer + masa estriha zna biti dovoljno da smanji taktiranje kompresora
+                i podigne sezonski COP.
+            </div>
+        </aside>
+    </div>
+
+    <!-- BAZA UREĐAJA WRAPPER -->
+    <div class="wrapper hidden-input" id="deviceDBWrapper" style="opacity:0;transition:opacity .3s ease;">
+        <main style="grid-column:1 / -1;max-width:1100px;">
+            <h1>
+                Baza uređaja
+                <span class="badge">beta</span>
+            </h1>
+
+            <div class="subtitle">
+                Ovdje održavaš listu uređaja (dizalice topline, pelet kotlovi, drva, plinski kotlovi, električni kotlovi).
+                Zalijepi iz Excela / CSV-a. Ja to spremim lokalno dok je stranica otvorena, parsiram i prikažem u tablici.
+                Možeš filtrirati po nazivu ili po tipu izvora (hp / pellet / wood / gas / elec).
+                Kasnije se ovo može koristiti za auto-popunjavanje snage i COP-a u kalkulatoru.
+            </div>
+
+            <section class="card">
+                <h2>Uvoz / uređivanje baze uređaja</h2>
+
+                <div class="section-grid">
+                    <div class="flexcol" style="grid-column:1 / -1;">
+                        <label>Podaci uređaja (CSV / tablica)
+                            <span class="hint">svaki red: naziv;tip;snaga_kW;polaz_min;polaz_max;COP_35;COP_55;napomena</span>
+                        </label>
+                        <textarea id="deviceDBInput" rows="8" style="min-height:150px;"
+placeholder="naziv;tip;snaga_kW;polaz_min;polaz_max;COP_35;COP_55;napomena
+HP XYZ 9kW;hp;9;25;55;4.2;2.6;zrak-voda inverter
+Pellet Kotao 25kW;pellet;25;60;80;;;modulacija peleta
+"></textarea>
+
+                        <div class="small-note">
+                            Nakon izmjene ovdje, lista ispod se automatski osvježava. Filter radi odmah.
+                        </div>
+                    </div>
+
+                    <div class="db-controls" style="grid-column:1 / -1;">
+                        <div style="flex:1;min-width:200px;">
+                            <label>Filter po nazivu / tipu</label>
+                            <input type="text" id="deviceDBFilter" placeholder="npr. hp, pellet, 12kW, Vaillant...">
+                        </div>
+                        <div style="font-size:.7rem;color:var(--text-dim);line-height:1.4;max-width:300px;">
+                            Tipovi: hp = dizalica topline, pellet = pelet, wood = drva, gas = plin, elec = električni.
+                        </div>
+                    </div>
+
+                    <div class="db-table-wrap" style="grid-column:1 / -1;">
+                        <table class="db-table" id="deviceDBTable">
+                            <thead>
+                                <tr>
+                                    <th>Naziv</th>
+                                    <th>Tip</th>
+                                    <th>Snaga (kW)</th>
+                                    <th>Polaz min–max (°C)</th>
+                                    <th>COP @35°C</th>
+                                    <th>COP @55°C</th>
+                                    <th>Napomena</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deviceDBTbody">
+                                <tr><td colspan="7" style="color:var(--text-dim);padding:.75rem;">Nema podataka još.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </div>
+</div> <!-- end .app-shell -->
 
 <script>
-// ----------------- HELPERS -----------------
+// ----------------- HELPER FUNKCIJE -----------------
 function round(x, d=1){ const p = Math.pow(10,d); return Math.round(x*p)/p; }
 function rint(x){ return Math.round(x); }
 
-// Toplinski gubici bazirani na klasi izolacije fasade/krova
+// termička kvaliteta ovojnice
 function getUFactor(insul){
-    if(insul==="low")    return 1.1;   // loša izolacija
-    if(insul==="medium") return 0.75;  // cca 8-10 cm fasade EPS
-    if(insul==="good")   return 0.55;  // 12-15 cm grafitni EPS/vuna, riješen krov
-    if(insul==="high")   return 0.35;  // niskoenergetski / pasivnije
+    if(insul==="low")    return 1.1;
+    if(insul==="medium") return 0.75;
+    if(insul==="good")   return 0.55;
+    if(insul==="high")   return 0.35;
     return 0.75;
 }
-
-// korekcija za tip stolarije (propusnost, Uw stakla i okvira)
+// utjecaj stolarije
 function stolarijaBonus(winVal){
-    if(winVal==="old")    return 1.2; // stara drvena / alu bez prekida → lošije
-    if(winVal==="double") return 1.0; // PVC dvostruko IZO standard
-    if(winVal==="triple") return 0.8; // troslojno IZO low-e, brtvljenje
+    if(winVal==="old")    return 1.2;
+    if(winVal==="double") return 1.0;
+    if(winVal==="triple") return 0.8;
     return 1.0;
 }
-
-// korekcija za tip objekta (stan ima manje vanjskih ploha po m³, hala više)
+// tip objekta
 function buildingTypeBonus(bt){
-    if(bt==="apartment") return 0.8; // stan dijeli zidove → manje gubitaka po m³
-    if(bt==="house")     return 1.0; // kuća kao referenca
-    if(bt==="hall")      return 1.2; // hala/visoka radionica tipično lošije
+    if(bt==="apartment") return 0.8;
+    if(bt==="house")     return 1.0;
+    if(bt==="hall")      return 1.2;
     return 1.0;
 }
-
-// Delta T = korisnikova željena sobna T - projektna vanjska
+// delta T
 function getDeltaT(climateT, roomTemp){
     return roomTemp - parseFloat(climateT);
 }
 
-// kWh/god baza po m² iz odabrane izolacije
+// kWh/god po m² iz odabrane izolacije
 function getNeedPerM2(selIns){
     const opt = selIns.options[selIns.selectedIndex];
     return parseFloat(opt.getAttribute('data-need-per-m2'));
 }
 
-// Litra/m podnog cijevnog kruga iz promjera
+// volum cijevi podnog grijanja po metru iz promjera
 function getLitersPerMeter(dia){
-    // volum = π * r² * 1m ; dia mm -> r m
-    const r = (parseInt(dia,10)/2)/1000;
+    const r = (parseInt(dia,10)/2)/1000; // mm -> m
     const m3perm = Math.PI * r*r;
     return m3perm*1000; // L/m
 }
 
-// koliki minimalni pufer L/kW za stabilan rad (ovisno o izvoru + podno da/ ne)
+// koliki minimalni pufer L/kW za stabilan rad
 function getMinBufferPerKW(src,isFloor){
     if(src==="hp")     return isFloor?8:15;
     if(src==="pellet") return isFloor?20:30;
     if(src==="wood")   return isFloor?50:60;
     if(src==="gas")    return isFloor?5:10;
+    if(src==="elec")   return 5; // elek. kotao ne treba akumulaciju, ali mali tehnički može
     return 15;
 }
-// akumulacijski pufer (posebno bitno za drva, dugi rad bez paljenja)
+// akumulacijski pufer (dulji rad bez paljenja) - bitno uglavnom za drva/pelet
 function getStorageBufferPerKW(src){
     if(src==="wood")   return 70;
     if(src==="pellet") return 40;
-    return 0; // kod dizalice/plina standardno ne ciljaš ogromnu akumulaciju
+    return 0;
 }
 
 // ako nema uneseni volumen radijatora -> gruba procjena
 function estimateRadiatorVolume(area, emitter){
     if(emitter==="floor") return 0;
+    // radijatorski sustav ~0.8 L/m², mix ~0.4 L/m²
     return area * (emitter==="rads" ? 0.8 : 0.4);
 }
 
-// snaga uređaja = toplinski gubitak * 1.15 (rezerva i PTV momentalno)
-function deviceSizeKW(heatLoadKW){
-    return heatLoadKW * 1.15;
+// broj krugova podnog po površini (heuristika ~1 krug / 10-12 m²)
+function suggestFloorLoops(totalArea){
+    return Math.max(1, Math.round(totalArea/12));
 }
 
-// godišnja toplina prostora baza = m² * kWh/m²·god
-function annualHeatDemand(area, needPerM2){
-    return area * needPerM2;
+// volum po krugu podnog grijanja
+function litersPerLoop(dia){
+    const Lpm = getLitersPerMeter(dia);
+    const loopLenM = 100; // 1 krug ~100 m
+    return Lpm * loopLenM;
+}
+
+// default polazna temp po emitteru
+function defaultFlowTempForEmitter(emitter){
+    if(emitter==="floor") return 35;
+    if(emitter==="rads")  return 55;
+    if(emitter==="mix")   return 45;
+    return 35;
 }
 
 // faktor radijatora pri nižoj polaznoj T
@@ -826,7 +1175,45 @@ function radiatorFactor(flowT){
     return Math.min(Math.max(factor,0.1),1.0);
 }
 
-// koliki volumen PTV treba obitelj
+// snaga uređaja = toplinski gubitak * 1.15 (rezerva + PTV)
+function deviceSizeKW(heatLoadKW){
+    return heatLoadKW * 1.15;
+}
+
+// godišnja toplinska potreba prostora
+function annualHeatDemand(areaTotal, needPerM2){
+    return areaTotal * needPerM2;
+}
+
+// COP račun (pojednostavljeno)
+// - dizalica topline: COP37 ~4, COP55 ~2.5. Interpoliramo po flowTemp.
+// - drugi izvori: 
+//    pelet ~90% (0.9), drva ~80% (0.8), plin ~95% (0.95), elektro 100% (1.0)
+function calcCOP(src, flowTemp){
+    if(src==="hp"){
+        const t = Math.max(30, Math.min(flowTemp, 60));
+        // linearno između 35°C -> COP 3.5 i 55°C -> COP 2.5
+        const cop35 = 3.5;
+        const cop55 = 2.5;
+        const cop = cop35 + (cop55 - cop35)*((t-35)/20);
+        return Math.max(1.5, round(cop,2));
+    }
+    if(src==="pellet"){
+        return 0.9; // učinkovitost-->tretiramo kao 0.9 "COP ekv."
+    }
+    if(src==="wood"){
+        return 0.8;
+    }
+    if(src==="gas"){
+        return 0.95;
+    }
+    if(src==="elec"){
+        return 1.0;
+    }
+    return 1.0;
+}
+
+// PTV volumen po broju ljudi
 function dhwVolumeByPeople(n){
     if(n<=1) return 80;
     if(n===2) return 100;
@@ -837,9 +1224,9 @@ function dhwVolumeByPeople(n){
     return 160;
 }
 
-// koliko m² spirale treba za prenos topline
+// površina spirale
 function coilAreaFromPower(powerKW){
-    // ~9 kW/m² za normalne uvjete
+    // ~9 kW/m² normalni uvjeti prijenosa
     return powerKW/9;
 }
 
@@ -852,38 +1239,37 @@ function electricHeaterKW(volumeL){
     return 6;
 }
 
-// opis izolacije/fasade za report
+// opis izolacije
 function describeInsulation(insulVal){
     if(insulVal==="low"){
-        return "Slabo izolirano: stara fasada ili bez fasade, vrlo tanko ili nikako izoliran krov. Tipično 4-6 cm starog stiropora ili samo žbuka. Toplinski mostovi nisu riješeni.";
+        return "Slabo izolirano: stara fasada ili bez fasade, vrlo tanko ili nikako izoliran krov. Toplinski mostovi nisu riješeni.";
     }
     if(insulVal==="medium"){
         return "Srednje izolirano: ETICS fasada ~8-10 cm EPS/stiropora ili kamene vune, izoliran tavan ~10 cm. Tipično stanje adaptirane kuće zadnjih 10-15 godina.";
     }
     if(insulVal==="good"){
-        return "Dobra izolacija: 12-15 cm grafitni EPS ili kamena vuna, krov/potkrovlje 15-20+ cm vune, toplinski mostovi većinom riješeni. Niskoenergetska adaptacija.";
+        return "Dobra izolacija: 12-15 cm grafitni EPS ili kamena vuna, krov/potkrovlje 15-20+ cm vune, toplinski mostovi uglavnom riješeni. Niskoenergetska adaptacija.";
     }
     if(insulVal==="high"){
-        return "Niskoenergetski standard: 15+ cm kvalitetne fasade (grafitni EPS / kamena vuna visokog ranga), 20-30 cm krovne izolacije, brtvljenje i detalji blizu pasivne kuće.";
+        return "Niskoenergetski standard: 15+ cm kvalitetne fasade i 20-30 cm krovne izolacije, brtvljenje i detalji blizu pasivne kuće.";
     }
     return "Standardna izolacija.";
 }
-
-// opis stolarije za report
+// opis stolarije
 function describeWindows(winVal){
     if(winVal==="old"){
         return "Stara stolarija: drvena ili stari alu profil bez termičkog prekida, jednostruko (ili loše) staklo, puno propuha i gubitaka.";
     }
     if(winVal==="double"){
-        return "Standardna PVC/ALU s dvostrukim IZO staklom (~Ug 1.1-1.3 W/m²K). Profili tipa Veka / Salamander / Rehau ili alu sa osnovnim termičkim prekidom (Schüco, Alumil).";
+        return "Standardna PVC/ALU s dvostrukim IZO staklom (~Ug 1.1-1.3 W/m²K).";
     }
     if(winVal==="triple"){
-        return "Troslojno IZO low-e (~Ug 0.5-0.7 W/m²K), PVC viših komora (Rehau Geneo, Salamander bluEvolution, Veka Softline 82) ili napredni alu sustavi s jakim termičkim prekidom (Schüco AWS, Alumil Supreme).";
+        return "Troslojno IZO low-e (~Ug 0.5-0.7 W/m²K), PVC viših komora ili napredni ALU profili s prekidom toplinskog mosta.";
     }
     return "Standardna stolarija.";
 }
 
-// ekspanzijska posuda: oko 8% od ukupne vode → zaokruži na veću komercijalnu
+// ekspanzija: cca 8% - zaokruži na komercijalnu veću
 function expansionVesselLiters(totalLiters){
     const need = totalLiters*0.08;
     const std=[12,18,24,35,50,80,100,150,200,300,500];
@@ -891,20 +1277,37 @@ function expansionVesselLiters(totalLiters){
     return Math.ceil(need);
 }
 
-// cijene energenata i sezonska potrošnja
-// uključujemo i PTV struju (i kod kombiniranih spremnika)
-function costEstimatesFull(kWhHeatSeason, dhwTankVol, dhwFromHeat){
-    // ulazi:
-    // - kWhHeatSeason = godišnja toplinska potreba prostora (kWh/god) ALI već korigirana na željenu sobnu T
-    //
-    // PTV:
-    // recimo ~40 L po osobi/dan, dizanje ~40K => ~1.9 kWh topline/osobi/dan.
-    // za 4 osobe ~7.6 kWh/dan ~ 2800 kWh/god topline.
-    // ovdje ćemo uzeti grubu ljestvicu po volumenu odabranog spremnika.
-    // Ovo je gruba instalaterska računica da kupac dobije osjećaj.
+// koliko pufera minimalno treba prema snazi i tipu
+// i na osnovu toga biramo "komercijalni" najbliži veći spremnik
+function chooseBufferSizeLiters(minLiters){
+    const std=[30,50,100,200,300,500,800,1000];
+    for(const s of std){ if(s>=minLiters) return s; }
+    return std[std.length-1];
+}
 
-    // radimo orijentir PTV toplinske godišnje potrebe po volumenu spremnika
-    // (kombinirani mali bojler manje, veliki obiteljski spremnik više tuševa).
+// efekt pufera na sezonski rad izvora (jako grubo):
+// - Dizalica + podno + umjeren pufer → manje taktira → efektivni COP povećan ~5%
+// - Kruto gorivo s velikim puferom → manje paljenja → bolja efikasnost ~+10% gorivu
+// - Pelet umjereno ~+5%
+// - Plin/elektrika: praktički ništa
+function bufferEfficiencyFactor(src, hasBuffer){
+    if(!hasBuffer) return 1.0;
+    if(src==="hp")     return 1.05;
+    if(src==="wood")   return 1.10;
+    if(src==="pellet") return 1.05;
+    return 1.0;
+}
+
+// glavna procjena potrošnje i troška energenata godišnje
+// kWhHeatSeason = godišnja toplinska potreba prostora (kWh/god) -> već uvažava željenu temperaturu
+// dhwTankVol    = volumen PTV spremnika
+// dhwFromHeat   = "yes" znači da PTV koristi glavni izvor topline
+// src           = tip izvora topline koji nas zanima za račun (hp/pellet/wood/gas/elec)
+// flowTemp      = polaz (utječe na COP kod dizalice topline)
+// price...      = cijene energenata
+// bufferFactor  = efekt pufera/cikliranja na učinkovitost
+function costForSource(kWhHeatSeason, dhwTankVol, dhwFromHeat, src, flowTemp, priceEl, priceGas, pricePellet, priceWoodM3, bufferFactor){
+    // PTV godišnja toplina (gruba ljestvica po spremniku)
     let ptvHeatYear = 0;
     if(dhwTankVol>=500) ptvHeatYear = 3200;
     else if(dhwTankVol>=300) ptvHeatYear = 2800;
@@ -913,316 +1316,296 @@ function costEstimatesFull(kWhHeatSeason, dhwTankVol, dhwFromHeat){
     else if(dhwTankVol>=120) ptvHeatYear = 1600;
     else if(dhwTankVol>=100) ptvHeatYear = 1400;
     else if(dhwTankVol>=80)  ptvHeatYear = 1200;
-    else ptvHeatYear = 800; // fallback minimalno tuševa
+    else ptvHeatYear = 800;
 
-    // Ako je PTV priključen na izvor grijanja ("yes"), onda dio te topline NE ide iz struje direktno.
-    // Ako nije, onda je praktično sve ta toplina plaćena kao struja grijača.
-    // Za jednostavnost:
-    let ptvElKWh = 0;
-    if(dhwTankVol>0){
-        if(dhwFromHeat==="yes"){
-            // PTV grijemo većinom iz izvora (kotao/dizalica), samo cca 20% struje backup
-            ptvElKWh = ptvHeatYear*0.2/3.0*3.0; // treat as ~20% el. grijanja direktno
-        }else{
-            // sve ide na struju grijača
-            ptvElKWh = ptvHeatYear; // pretvaramo toplinsku potrebu ≈ el.kWh jer grijač ~100% el->toplina
-        }
-    }else{
-        ptvElKWh = 0; // nema spremnika? zanemarimo PTV
+    // učinkovitosti
+    let effOrCOP;
+    if(src==="hp"){
+        effOrCOP = calcCOP("hp", flowTemp); // npr 3.0
+    } else if(src==="pellet"){
+        effOrCOP = calcCOP("pellet", flowTemp); // 0.9
+    } else if(src==="wood"){
+        effOrCOP = calcCOP("wood", flowTemp); // 0.8
+    } else if(src==="gas"){
+        effOrCOP = calcCOP("gas", flowTemp); // 0.95
+    } else if(src==="elec"){
+        effOrCOP = calcCOP("elec", flowTemp); //1.0
+    } else {
+        effOrCOP = 1.0;
     }
 
-    // Sada grijanje prostora:
-    // SCOP dizalice: ~3.0 → struja_el = toplinska / 3
-    // plin eta 0.95
-    // pelet eta 0.90
-    // drva eta 0.80 (ali uzmemo tipično tvrda drva, suha)
+    // bufferFactor poboljšava efektivnost kod određenih izvora
+    // interpretacija:
+    //  - kod COP izvora (hp) -> COP_eff = COP * bufferFactor
+    //  - kod učinkovitosti goriva (0.x) -> eff_eff = eff * bufferFactor
+    let effEff;
+    let COPeff;
+    if(src==="hp"){
+        COPeff = effOrCOP * bufferFactor;
+        effEff = null;
+    } else {
+        COPeff = null;
+        effEff = effOrCOP * bufferFactor;
+    }
 
-    const hpCOP = 3.0;
-    const gasEff = 0.95;
-    const pelEff = 0.90;
-    const woodEff= 0.80;
+    // grijanje prostora
+    let inputEnergySpace_kWh = 0;
+    if(src==="hp"){
+        inputEnergySpace_kWh = kWhHeatSeason / COPeff;
+    } else if(src==="elec"){
+        // električni kotao je ~100% => 1:1
+        inputEnergySpace_kWh = kWhHeatSeason / 1.0;
+    } else {
+        // pelet/drvo/plin - koristimo učinkovitost effEff
+        inputEnergySpace_kWh = kWhHeatSeason / effEff;
+    }
 
-    const heatPumpElectricKWh = kWhHeatSeason/hpCOP;
-    const gasKWhInput         = kWhHeatSeason/gasEff;
-    const pelletKWhInput      = kWhHeatSeason/pelEff;
-    const woodKWhInput        = kWhHeatSeason/woodEff;
+    // PTV:
+    // ako PTV je "yes" (grije ga glavni izvor), onda ptvHeatYear ide kroz taj izvor.
+    // ako nije, onda PTV ide čisto na struju grijača (1:1 elektrika)
+    let ptvViaThisSource_kWh = 0;
+    let ptvDirectElectric_kWh = 0;
 
-    // dodajemo PTV elektriku u ukupnu struju (jer i to čovjek plati)
-    const totalHPel = heatPumpElectricKWh + (dhwFromHeat==="yes" ? (ptvHeatYear/hpCOP) : 0);
-    // ako PTV ide direktno na struju bez izvora heating:
-    const totalDirectEl = ptvElKWh;
+    if(dhwTankVol>0){
+        if(dhwFromHeat==="yes"){
+            // PTV ide kroz izvor
+            if(src==="hp"){
+                ptvViaThisSource_kWh = ptvHeatYear / COPeff;
+            } else if(src==="elec"){
+                ptvViaThisSource_kWh = ptvHeatYear / 1.0;
+            } else {
+                ptvViaThisSource_kWh = ptvHeatYear / effEff;
+            }
+        } else {
+            // PTV ide električno neovisno
+            ptvDirectElectric_kWh = ptvHeatYear; // grijač ~100%
+        }
+    }
 
-    // cijene €/kWh ulazne energije
-    const elPrice   = 0.15; // €
-    const gasPrice  = 0.076;
-    const pelPrice  = 0.065;
-    const woodPrice = 0.04;
+    // ukupna ulazna energija koju taj izvor traži
+    const totalEnergy_kWh = inputEnergySpace_kWh + ptvViaThisSource_kWh;
 
-    // trošak grijanja prostora (bez PTV) po energentu:
-    const hpCostSpace    = heatPumpElectricKWh * elPrice;
-    const gasCostSpace   = gasKWhInput * gasPrice;
-    const pelletCostSpace= pelletKWhInput * pelPrice;
-    const woodCostSpace  = woodKWhInput * woodPrice;
+    // trošak:
+    // dizalica topline i električni i direktni grijač -> struja
+    // plin -> plin
+    // pelet -> pelet €/kWh
+    // drva -> €/m³ uz pretvorbu
+    let costEuro = 0;
+    let displayEnergy_kWh = totalEnergy_kWh; // prikazat ćemo ovo
+    if(src==="hp"){
+        // hp troši struju
+        costEuro = totalEnergy_kWh * priceEl;
+        // plus direktni PTV na struju ako nije "yes"
+        costEuro += ptvDirectElectric_kWh * priceEl;
+        displayEnergy_kWh += ptvDirectElectric_kWh;
+    } else if(src==="elec"){
+        // električni kotao je struja
+        costEuro = totalEnergy_kWh * priceEl;
+        costEuro += ptvDirectElectric_kWh * priceEl;
+        displayEnergy_kWh += ptvDirectElectric_kWh;
+    } else if(src==="gas"){
+        costEuro = totalEnergy_kWh * priceGas;
+        // ako ptvDirectElectric_kWh > 0, to nije plin, to je struja PTV grijača
+        // ali mi ovdje računamo čistu opciju "sve na plin"? 
+        // pojednostavljenje: zanemarimo direktni električni PTV jer gas scenarij je "sve gas"
+    } else if(src==="pellet"){
+        costEuro = totalEnergy_kWh * pricePellet;
+    } else if(src==="wood"){
+        // drvo: pretpostavimo ~1800 kWh/m³ suhe bukve/graba
+        const kWhPerM3 = 1800;
+        const m3 = totalEnergy_kWh / kWhPerM3;
+        costEuro = m3 * priceWoodM3;
+    }
 
-    // dodaj i PTV:
-    const hpCostTotal    = hpCostSpace + (dhwFromHeat==="yes" ? (ptvHeatYear/hpCOP)*elPrice : 0);
-    // PTV direktno struja:
-    const directElCost   = totalDirectEl * elPrice;
-
-    // Trošak drva: računamo iz woodKWhInput.
-    // Tvrda suha drva ~4 kWh/kg, oko 1800 kWh/m³ (bukva/grab-suha složena).
-    // m³/god = toplina / (woodEff * 1800)? Pazimo: woodKWhInput je kWh primarne energije iz drva.
-    // woodKWhInput ~ kWh primarne energije = m³ * 1800 kWh/m³
-    const woodM3Year = woodKWhInput / 1800;
-    // cijena 1 m³ iscjepanih suhih drva s rezanjem+dostavom neka bude cca 120 €/m³ (orijentacijski).
-    const woodCostTotal = woodM3Year * 120;
-
-    // Konačni povrat:
     return {
-        // potrošnje:
-        hpKWhEl: totalHPel,            // dizalica topline + PTV preko nje
-        gasKWh: gasKWhInput,           // kWh plina
-        pelKWh: pelletKWhInput,        // kWh ekv. peleta
-        woodKWh: woodKWhInput,         // kWh ekv. drva
-        ptvElKWh: totalDirectEl,       // ako PTV ide direktno u struju
-
-        // troškovi:
-        hpCost: hpCostTotal + directElCost, // dizalica + eventualno direkt el PTV
-        gasCost: gasCostSpace,              // plin (PTV iz plina nije posebno obračunat)
-        pelCost: pelletCostSpace,
-        woodCost: woodCostTotal,
-
-        woodM3: woodM3Year,
-        ptvElCost: directElCost
+        kWhInput: displayEnergy_kWh,
+        euroYear: costEuro,
+        ptvDirectEl: ptvDirectElectric_kWh
     };
 }
 
-// podno krugovi
-function calcLoops(floorLen){
-    if(floorLen<=0) return 0;
-    return Math.max(1, Math.ceil(floorLen/100)); // ~100 m po krugu
+// opis izvora topline za report
+function srcTxtMapFn(src){
+    if(src==="hp") return "Dizalica topline";
+    if(src==="pellet") return "Kotao na pelete";
+    if(src==="wood") return "Kotao na drva / kruto gorivo";
+    if(src==="gas") return "Plinski kondenzacijski kotao";
+    if(src==="elec") return "Električni kotao";
+    return "Izvor grijanja";
 }
 
-// ----------------- GLAVNI CALC STATE -----------------
-const baseCalc = {
-    buildingType:"house",
-    area:150,
-    height:2.6,
-    insulation:"medium",
-    windows:"double",
-    climateT:"-10",
-    roomTemp:21,
-    numPeople:4,
-    heatLoad_kW:0,
-    annualHeatDemand:0,
-    deltaT:0
-};
-
-function calcStep1Only(){
-    baseCalc.buildingType = document.getElementById("buildingType").value;
-    baseCalc.area         = parseFloat(document.getElementById("area").value)||0;
-    baseCalc.height       = parseFloat(document.getElementById("height").value)||0;
-    baseCalc.insulation   = document.getElementById("insulation").value;
-    baseCalc.windows      = document.getElementById("windows").value;
-    baseCalc.climateT     = document.getElementById("climate").value;
-    baseCalc.roomTemp     = parseFloat(document.getElementById("roomTemp").value)||21;
-    baseCalc.numPeople    = parseInt(document.getElementById("numPeople").value)||1;
-
-    const insSel = document.getElementById("insulation");
-    const needPerM2 = getNeedPerM2(insSel);
-
-    const volumeHouse = baseCalc.area * baseCalc.height;
-
-    const uBase = getUFactor(baseCalc.insulation);
-    const uAdj  = uBase
-                * stolarijaBonus(baseCalc.windows)
-                * buildingTypeBonus(baseCalc.buildingType);
-
-    const dT = getDeltaT(baseCalc.climateT, baseCalc.roomTemp);
-    const heatLoss_kW = (uAdj * volumeHouse * dT)/1000;
-
-    // godišnja toplina prostora bazna
-    const annualHeatBase = annualHeatDemand(baseCalc.area, needPerM2);
-
-    // povećaj za visoku željenu sobnu T:
-    // heuristika: +7% po svakom +1°C iznad 20°C
-    const comfortDelta = baseCalc.roomTemp - 20;
-    const comfortFactor = 1 + 0.07 * (comfortDelta>0?comfortDelta:0);
-    const annualHeatAdj = annualHeatBase * comfortFactor;
-
-    baseCalc.heatLoad_kW      = heatLoss_kW;
-    baseCalc.deltaT           = dT;
-    baseCalc.annualHeatDemand = annualHeatAdj;
-}
-
-// ----------------- REPORT BUILDER -----------------
+// BUILD PDF REPORT
 function buildClientReport(d){
-    const srcTxtMap = {
-        hp:"Dizalica topline",
-        pellet:"Kotao na pelete",
-        wood:"Kotao na drva / kruto gorivo",
-        gas:"Plinski kondenzacijski kotao"
-    };
-    const srcTxt = srcTxtMap[d.heatSource] || "Izvor grijanja";
-
     const typeTxtMap = {
         house:"Kuća",
         apartment:"Stan",
         hall:"Poslovna hala / radionica"
     };
-    const typeTxt = typeTxtMap[d.buildingType] || "Objekt";
-
-    const insulationExplain = describeInsulation(d.insulationClass);
-    const windowsExplain    = describeWindows(d.windows);
-
     const emitterTxtMap = {
         floor:`Podno grijanje (polaz ${d.flowTemp} °C)`,
         rads:`Radijatorsko grijanje (polaz ${d.flowTemp} °C)`,
         mix:`Podno + Radijatori (polaz ${d.flowTemp} °C)`
     };
+    const typeTxt = typeTxtMap[d.buildingType] || "Objekt";
     const emitterTxt = emitterTxtMap[d.emitter] || "Emiterski sustav";
+    const insulationExplain = describeInsulation(d.insulationClass);
+    const windowsExplain = describeWindows(d.windows);
 
+    // rangiraj izvore po cijeni
     const costList = [
         {name:"Dizalica topline", val:d.annualCostHP},
         {name:"Plin",             val:d.annualCostGas},
         {name:"Peleti",           val:d.annualCostPellet},
-        {name:"Drva",             val:d.annualCostWood}
+        {name:"Drva",             val:d.annualCostWood},
+        {name:"Električni kotao", val:d.annualCostElec}
     ].filter(x=>x.val>0).sort((a,b)=>a.val-b.val);
     const cheapestStr = costList.length
         ? `${costList[0].name} ≈ ${rint(costList[0].val)} €/god`
         : "-";
 
-    // PTV opis
+    const woodLine =
+        `• Grijanje na drva: oko ${round(d.woodM3Year,2)} m³/god suhog tvrdog drva, ≈ ${rint(d.annualCostWood)} €/god.`;
+
     let ptvText =
-        `• Broj osoba: ${d.numPeople}\n`+
-        `• Preporučeni volumen spremnika PTV: ≥ ${d.ptvVolRec} L\n`;
+`• Broj osoba: ${d.numPeople}
+• Preporučeni volumen spremnika PTV: ≥ ${d.ptvVolRec} L
+`;
     if(d.dhwTankVol>0){
-        ptvText += `• Odabrani spremnik: ${d.dhwTankVol} L\n`;
+        ptvText += `• Odabrani spremnik: ${d.dhwTankVol} L
+`;
         if(d.dhwFromHeating==="yes"){
-            ptvText += `• Spremnik priključen na glavni izvor topline (prioritet PTV zimi).\n`;
-            ptvText += `• Spiralni izmjenjivač: oko ${round(d.dhwCoilA,2)} m² za brzo punjenje.\n`;
-            ptvText += `• El. grijač (~${d.dhwHeater} kW) kao rezerva.\n`;
+            ptvText += `• Spremnik priključen na glavni izvor topline (prioritet PTV zimi).
+• Spiralni izmjenjivač: oko ${round(d.dhwCoilA,2)} m².
+• El. grijač (~${d.dhwHeater} kW) kao rezerva.
+`;
         } else {
-            ptvText += `• Spremnik se grije električnim grijačem (~${d.dhwHeater} kW).\n`;
+            ptvText += `• Spremnik se grije električnim grijačem (~${d.dhwHeater} kW).
+`;
         }
     } else {
-        ptvText += `• Spremnik PTV nije odabran – za komfor se preporučuje barem ${d.ptvVolRec} L.\n`;
+        ptvText += `• Spremnik PTV nije odabran – za komfor se preporučuje barem ${d.ptvVolRec} L.
+`;
     }
-    ptvText += `• Procjena godišnje struje za PTV: ~${rint(d.ptvElCost)} €/god (oko ${rint(d.ptvElKWh)} kWh el.).\n`;
-
-    const woodLine =
-        `• Grijanje na drva: oko ${round(d.woodM3Year,2)} m³/god suhog tvrdog drva (bukva/grab/hrast), `+
-        `što je ≈ ${rint(d.annualCostWood)} €/god (uklj. dostava/rezanje).`;
+    ptvText += `• Procjena godišnje struje samo za PTV backup: oko ${rint(d.ptvElCost)} €/god (oko ${rint(d.ptvElKWh)} kWh el.).
+`;
 
     const methodology =
 `METODOLOGIJA PRORAČUNA GUBITAKA I TOPLINE
 --------------------------------------
 1) Volumen objekta:
-   V = Površina (m²) × Visina prostora (m).
-   Za ovaj objekt: V ≈ ${d.area} m² × ${round(d.height,2)} m = ${round(d.area*d.height,1)} m³.
+   Zbrajamo svaku etažu: Površina (m²) × Visina (m).
+   Za ovaj objekt ukupno ≈ ${round(d.totalVolume,1)} m³.
 
-2) Specifični toplinski gubitak zgrade:
-   Uzimamo bazni koeficijent gubitaka po volumenu [W/(m³·K)] na temelju fasade i izolacije krova.
-   Taj koeficijent je VEĆI kod loše izoliranih objekata (tanka fasada ili bez fasade, neizoliran krov),
-   a MANJI kod kuća sa 12-15+ cm fasade (grafitni EPS / kamena vuna), riješenim toplinskim mostovima
-   i dobro izoliranim krovom/potkrovljem.
-
-   Zatim korigiramo za stolariju:
-   • Stara drvena / alu bez termičkog prekida → jako veliki gubici zraka i topline.
-   • Standardna PVC/ALU s dvostrukim IZO staklom (~Ug 1.1-1.3 W/m²K, profili Veka / Salamander / Rehau
-     ili alu Schüco / Alumil s osnovnim termičkim prekidom) → srednji gubici.
-   • Troslojno IZO low-e (~Ug 0.5-0.7 W/m²K), PVC viših komora (Rehau Geneo, Salamander bluEvolution,
-     Veka Softline 82) ili napredni ALU profili sa snažnim termičkim prekidom (Schüco AWS, Alumil Supreme)
-     → vrlo niski gubici i odlična brtvljenost.
-
-   I korigiramo za tip objekta:
-   • Samostojeća kuća gubi toplinu na sve strane (zidovi+krov+pod).
-   • Stan (srednji kat) dijeli zidove sa susjedima → manji specifični gubici.
-   • Hala/radionica često velika visina i tanki paneli → veći gubitci.
-
-   Nakon svega toga dobivamo efektivni koeficijent U_eff [W/(m³·K)].
+2) Specifični toplinski gubitak:
+   Uzimamo bazni koeficijent gubitaka po volumenu [W/(m³·K)]
+   na temelju fasade/izolacije krova.
+   Korigiramo za stolariju (propusnost prozora/okvira)
+   i za tip objekta (samostojeća kuća vs. stan u sredini zgrade).
 
 3) Temperaturna razlika (ΔT):
-   ΔT = T_unutra - T_vanjska_projektna.
-   Ovdje koristimo temperaturu koju želi korisnik, ${round(d.roomTemp,1)} °C,
-   a ne nužno standardnih 20-21 °C.
-   Ako je projektna vanjska oko ${round(d.roomTemp - d.deltaT,1)} °C,
-   onda je ΔT ≈ ${round(d.deltaT,1)} K.
-
-   Veća željena sobna T direktno povećava ΔT i POVEĆAVA potrebnu snagu grijanja.
+   ΔT = T_unutra (${round(d.roomTemp,1)} °C) - T_vanjska_projektna (~${round(d.roomTemp - d.deltaT,1)} °C).
+   Ovdje ΔT ≈ ${round(d.deltaT,1)} K.
+   Veća ciljna sobna temperatura direktno povećava potrebnu snagu.
 
 4) Trenutni toplinski gubitak (W):
    Q_W = U_eff × V × ΔT.
-   To je opterećenje grijanja na najhladniji projektni dan.
+   To je projektno opterećenje grijanja na najhladniji dan.
 
 5) Snaga grijanja (kW):
    Q_kW = Q_W / 1000.
-   To je toplinska snaga koju sustav mora isporučiti da održi ~${round(d.roomTemp,1)} °C unutra
-   u najhladnijim uvjetima: ≈ ${round(d.heatLoad_kW,1)} kW.
+   Ovdje ≈ ${round(d.heatLoad_kW,1)} kW.
+   U praksi dodajemo rezervu i PTV → dimenzioniramo uređaj oko ${round(d.deviceAutoKW,1)} kW.
+
+   Napomena: kod svakog realnog sustava postoji i gubitak ventilacijom/provjetravanjem.
+   To smo riješili kroz sigurnosnu rezervu.
 
 6) Godišnja toplinska potreba (kWh/god):
-   Bazno uzimamo tipične vrijednosti kWh/m²·god po klasi izolacije:
-   • Slabo izolirano / stara kuća: ~140 kWh/m²·god (ili više),
-   • Srednje (8-10 cm EPS fasade, PVC dvostruko staklo Veka / Salamander / Rehau): ~100 kWh/m²·god,
-   • Dobra izolacija (12-15 cm grafitni EPS ili kamena vuna, dosta riješenih mostova): ~60 kWh/m²·god,
-   • Niskoenergetska / nova (15+ cm grafitni EPS ili kvalitetna vuna, troslojno staklo
-     Rehau Geneo / Salamander bluEvolution / Veka Softline 82, ALU Schüco / Alumil
-     s ozbiljnim termičkim prekidom): ~40 kWh/m²·god.
-
-   Onda povećavamo potrošnju ako korisnik želi višu temperaturu prostora:
-   pravilo: +1 °C iznad ~20 °C ≈ +7% potrošnje.
-   Zato ovaj objekt ima procijenjenih ≈ ${rint(d.annualHeatDemand)} kWh/god
-   za održavanje ${round(d.roomTemp,1)} °C, a ne samo 20-21 °C.
+   Osnovna referenca je kWh/m²·god prema razini izolacije
+   (loše: ~140, srednje: ~100, dobro: ~60, niskoenergetski: ~40).
+   Povećavamo za višu željenu sobnu temperaturu:
+   svaka +1 °C iznad ~20 °C ≈ +7% potrošnje.
+   Ovaj objekt procijenjeno treba oko ${rint(d.annualHeatDemand)} kWh/god
+   da zadrži ${round(d.roomTemp,1)} °C.
 
 7) Dimenzioniranje izvora topline:
-   Izvor topline mora pokriti:
-   • toplinske gubitke prostora,
-   • punjenje PTV spremnika (sanitarna topla voda),
-   • sigurnosnu rezervu (~15%).
-   Zbog toga preporučena nazivna snaga izvora (${srcTxt}) ispada oko ${round(d.device_kW,1)} kW,
-   a ne samo "goli" toplinski gubitak zidova.
+   Izvor mora pokriti toplinske gubitke prostora + punjenje PTV spremnika
+   i imati sigurnosnu rezervu.
+   Zato preporučena nazivna snaga (${srcTxtMapFn(d.heatSource)}):
+   ~${round(d.deviceAutoKW,1)} kW,
+   a ti si trenutno postavio ${round(d.deviceKWUser,1)} kW.
+
+8) Pufer:
+   Za dizalicu topline, pelet i pogotovo kruto gorivo,
+   pufer služi za stabilan kontinuirani rad i da izvor ne pali/gasi stalno.
+   Kod krutog goriva veliki pufer je sigurnost (višak topline ode u spremnik,
+   smanjuje rizik pregrijavanja).
+   Kod dizalice topline, manji tehnički pufer + masa estriha podnog grijanja
+   smanjuje taktiranje kompresora i podiže sezonski COP.
+
+9) Trošak i cijene energenata:
+   Računali smo godišnji trošak grijanja prostora + PTV
+   na temelju ovih cijena:
+     • Struja: ${d.priceEl} €/kWh
+     • Plin: ${d.priceGas} €/kWh
+     • Pelet: ${d.pricePellet} €/kWh
+     • Drva: ${d.priceWoodM3} €/m³ (suha tvrda drva, iscjepano + dostava)
+
+   Pufer i niži polaz povećavaju učinkovitost dizalice topline
+   (veći COP → manje struje),
+   a kod drva/peleta zna smanjiti učestalost loženja i ukupni trošak.
 
 ZAKLJUČAK:
-   Ako želite držati ${round(d.roomTemp,1)} °C u prostoru,
-   računata snaga oko ${round(d.heatLoad_kW,1)} kW i godišnja potreba ~${rint(d.annualHeatDemand)} kWh/god
-   su realni brojevi za dimenzioniranje opreme i plan troška energenata.
+   Za željenih ${round(d.roomTemp,1)} °C:
+   - projektna snaga grijanja ≈ ${round(d.heatLoad_kW,1)} kW
+   - preporučena snaga izvora ≈ ${round(d.deviceAutoKW,1)} kW
+   - godišnja potreba topline ≈ ${rint(d.annualHeatDemand)} kWh/god
+   - najpovoljniji energent (orijentacija): ${cheapestStr}
+
+   Ovo NIJE ovjereni strojarski projekt.
+   Ovo je tehnička orijentacija za dimenzioniranje opreme i razgovor o ponudi.
 `;
 
     let text = "";
     text += "=== SPECIFIKACIJA GRIJANJA / PTV ===\n";
     text += "Datum: " + new Date().toLocaleDateString("hr-HR") + "\n";
     text += "--------------------------------------\n";
+    text += `KUPAC: ${d.custName || "-"}\n`;
+    text += `ADRESA OBJEKTA: ${d.custAddr || "-"}\n`;
+    text += `KONTAKT: ${d.custContact || "-"}\n`;
+    text += "--------------------------------------\n\n";
 
     text += "OBJEKT:\n";
     text += `• Tip objekta: ${typeTxt}\n`;
-    text += `• Površina / Volumen: ${d.area} m² / ${round(d.area*d.height,1)} m³\n`;
+    text += `• Površina ukupno: ${d.totalArea} m²\n`;
+    text += `• Ukupni volumen: ${round(d.totalVolume,1)} m³\n`;
     text += `• Ciljana temperatura prostora: ${round(d.roomTemp,1)} °C\n`;
     text += `• Fasada / izolacija krova: ${d.insulLabel}\n`;
     text += `  ${insulationExplain}\n`;
     text += `• Stolarija / prozori: ${windowsExplain}\n`;
     text += `• Projektna temperaturna razlika ΔT: ${round(d.deltaT,1)} °C\n`;
-    text += `• Procijenjena godišnja potreba topline (grijanje prostora uz tu temperaturu): ~${rint(d.annualHeatDemand)} kWh/god\n`;
-    text += "\n";
+    text += `• Procijenjena godišnja potreba topline (grijanje prostora uz tu temperaturu): ~${rint(d.annualHeatDemand)} kWh/god\n\n`;
 
     text += "SNAGA I IZVOR TOPLINE:\n";
     text += `• Vršni toplinski gubitak objekta (najhladniji dan, ${round(d.roomTemp,1)} °C unutra): ~${round(d.heatLoad_kW,1)} kW\n`;
-    text += `• Preporučena nazivna snaga izvora (${srcTxt}): ~${round(d.device_kW,1)} kW\n`;
-    text += `  (uračunato grijanje prostora + PTV + sigurnosna rezerva)\n`;
-    text += "\n";
+    text += `• Preporučena nazivna snaga izvora (${srcTxtMapFn(d.heatSource)}): ~${round(d.deviceAutoKW,1)} kW\n`;
+    text += `• Postavljena snaga uređaja: ${round(d.deviceKWUser,1)} kW\n`;
+    text += "  (uračunato grijanje prostora + PTV + sigurnosna rezerva)\n\n";
 
     text += "SUSTAV DISTRIBUCIJE TOPLINE:\n";
     text += `• Emiterski sustav: ${emitterTxt}\n`;
     if(d.emitter==="floor"||d.emitter==="mix"){
-        text += `• Podno grijanje: ukupno ${d.floorLen} m cijevi → cca ${d.loops} krug(ova).\n`;
+        text += `• Podno grijanje: cca ${d.floorLoops} krug(ova) (~100 m cijevi svaki).\n`;
     }
     if(d.emitter==="rads"||d.emitter==="mix"){
         text += `• Radijatori: tražena deklarirana snaga ~${round(d.totalRadsKW,1)} kW pri polazu ${d.flowTemp} °C.\n`;
     }
-    text += `• Volumen vode u sustavu: ≈ ${rint(d.totalWaterVol)} L\n`;
+    text += `• Volumen vode u sustavu (uklj. pufer): ≈ ${rint(d.totalWaterVol)} L\n`;
     text += `• Ekspanzijska posuda: ~${rint(d.expansionLiters)} L (uzeti veću komercijalnu veličinu)\n`;
-    text += `• Tehnički pufer (stabilan rad izvora): ~${d.puferMin_L} L\n`;
-    if(d.puferStor_L>0){
-        text += `• Akumulacijski pufer (drva/kruto gorivo): ~${d.puferStor_L} L\n`;
+    if(d.showBuffer){
+        text += `• Tehnički / akumulacijski pufer: odabrano ${d.bufferChosen} L (minimalno preporučeno ~${d.puferMin_L} L)\n`;
+        if(d.puferStor_L>0){
+            text += `• Za drva/pelet poželjan akumulacijski pufer oko ${d.puferStor_L} L, radi stabilnog i sigurnog rada.\n`;
+        }
     }
     text += "\n";
 
@@ -1232,8 +1615,9 @@ ZAKLJUČAK:
     text += "EKONOMIJA RADA (godišnje):\n";
     text += `• Najpovoljnije: ${cheapestStr}\n`;
     text += `• Dizalica topline: ~${rint(d.annualCostHP)} €/god (oko ${rint(d.hpKWhEl)} kWh el./god)\n`;
-    text += `• Plin: ~${rint(d.annualCostGas)} €/god\n`;
-    text += `• Peleti: ~${rint(d.annualCostPellet)} €/god\n`;
+    text += `• Plin: ~${rint(d.annualCostGas)} €/god (oko ${rint(d.gasKWh)} kWh plina/god)\n`;
+    text += `• Peleti: ~${rint(d.annualCostPellet)} €/god (oko ${rint(d.pelKWh)} kWh peleta/god)\n`;
+    text += `• Električni kotao: ~${rint(d.annualCostElec)} €/god (oko ${rint(d.elecKWh)} kWh el./god)\n`;
     text += woodLine + "\n\n";
 
     text += methodology;
@@ -1244,177 +1628,619 @@ ZAKLJUČAK:
     return text;
 }
 
-// ----------------- FULL CALC (STEP 1 + STEP 2) -----------------
-function calcAllAndUpdateUI(){
-    calcStep1Only(); // update baseCalc for object data first
+// ----------------- GLOBAL STATE -----------------
+const state = {
+    buildingType:"house",
+    numFloors:1,
+    floors: [
+        { area:150, height:2.6 },
+    ],
+    insulation:"medium",
+    windows:"double",
+    climateT:-10,
+    roomTemp:21,
+    numPeople:4,
 
-    // Sustav grijanja:
-    const heatSource = document.getElementById("heatSource").value;
-    const emitter    = document.getElementById("emitter").value;
-    const pipeDia    = document.getElementById("pipeDia").value;
-    const floorLen   = parseFloat(document.getElementById("floorLen").value||0);
-    const radVolIn   = parseFloat(document.getElementById("radVol").value||0);
-    const flowTemp   = parseFloat(document.getElementById("flowTemp").value||35);
+    heatSource:"hp",
+    emitter:"floor",
+    flowTemp:35,
+    floorLoopsInput:10,
+    pipeDia:"16",
+    radVolUser:0,
+    dhwTankVol:0,
+    dhwFromHeat:"no",
+    bufferTankVol:0,
+
+    deviceKWUser:0, // ručni unos snage uređaja
+
+    priceEl:0.15,
+    priceGas:0.076,
+    pricePellet:0.065,
+    priceWoodM3:120,
+
+    custName:"",
+    custAddr:"",
+    custContact:"",
+
+    // baza uređaja
+    deviceDBRaw:"",
+    deviceDBFilter:"",
+    deviceDBParsed:[]
+};
+
+// ----------------- CALC STEP 1 (OBJEKT) -----------------
+function calcStep1Object(){
+    // čitanje inputa
+    state.buildingType = document.getElementById("buildingType").value;
+    state.numFloors = parseInt(document.getElementById("numFloors").value,10);
+
+    // floors (etaže)
+    state.floors = [];
+    for(let i=1;i<=state.numFloors;i++){
+        const a = parseFloat(document.getElementById(`floorArea_${i}`).value)||0;
+        const h = parseFloat(document.getElementById(`floorHeight_${i}`).value)||2.6;
+        state.floors.push({area:a,height:h});
+    }
+
+    state.insulation = document.getElementById("insulation").value;
+    state.windows    = document.getElementById("windows").value;
+    state.climateT   = parseFloat(document.getElementById("climate").value);
+    state.roomTemp   = parseFloat(document.getElementById("roomTemp").value)||21;
+    state.numPeople  = parseInt(document.getElementById("numPeople").value)||1;
+
+    // izračun volumena i površine
+    let totalArea = 0;
+    let totalVolume = 0;
+    for(const f of state.floors){
+        totalArea += f.area;
+        totalVolume += f.area * f.height;
+    }
+
+    // osnovni koeficijent gubitaka W/(m3*K)
+    const uBase = getUFactor(state.insulation);
+    const uAdj  = uBase
+                * stolarijaBonus(state.windows)
+                * buildingTypeBonus(state.buildingType);
+
+    // deltaT
+    const dT = getDeltaT(state.climateT, state.roomTemp);
+
+    // toplinski gubitak kW
+    const heatLoss_kW = (uAdj * totalVolume * dT)/1000;
+
+    // godišnja toplina prostora bazna na m2
+    const needPerM2 = getNeedPerM2(document.getElementById("insulation"));
+    const annualHeatBase = annualHeatDemand(totalArea, needPerM2);
+
+    // korekcija za "želim 22-23°C a ne 20-21°C"
+    const comfortDelta = state.roomTemp - 20;
+    const comfortFactor = 1 + 0.07 * (comfortDelta>0?comfortDelta:0);
+    const annualHeatAdj = annualHeatBase * comfortFactor;
+
+    // sve u state
+    state.totalArea = totalArea;
+    state.totalVolume = totalVolume;
+    state.Ueff = uAdj;
+    state.deltaT = dT;
+    state.heatLoad_kW = heatLoss_kW;
+    state.annualHeatDemand = annualHeatAdj;
+}
+
+// ----------------- CALC STEP 2 (SUSTAV) -----------------
+function calcStep2System(){
+    state.heatSource = document.getElementById("heatSource").value;
+    state.emitter    = document.getElementById("emitter").value;
+    state.pipeDia    = document.getElementById("pipeDia").value;
+    state.floorLoopsInput = parseInt(document.getElementById("floorLoopsInput").value)||0;
+    state.radVolUser = parseFloat(document.getElementById("radVol").value)||0;
+    state.flowTemp   = parseFloat(document.getElementById("flowTemp").value)||35;
     const dhwTankVal = document.getElementById("dhwTank").value;
-    const dhwFromHeat= document.getElementById("dhwFromHeating").value;
+    state.dhwTankVol = dhwTankVal==="none"?0:parseFloat(dhwTankVal);
+    state.dhwFromHeat= document.getElementById("dhwFromHeating").value;
+    state.bufferTankVol = parseFloat(document.getElementById("bufferTank").value)||0;
 
-    const dhwTankVol = (dhwTankVal==="none") ? 0 : parseFloat(dhwTankVal);
+    // deviceKWUser (ručna snaga)
+    state.deviceKWUser = parseFloat(document.getElementById("deviceKWInput").value)||0;
+}
 
-    // vidljivost polja ovisno o emiteru
-    const isFloor = (emitter==="floor"||emitter==="mix");
-    const isRads  = (emitter==="rads" ||emitter==="mix");
-    document.getElementById("floorPipeDiameterDiv").classList.toggle("hidden-input", !isFloor);
-    document.getElementById("floorPipeLengthDiv").classList.toggle("hidden-input", !isFloor);
+// ----------------- CALC COST INPUTS & CUSTOMER -----------------
+function calcStep3CostsAndCustomer(){
+    state.priceEl      = parseFloat(document.getElementById("priceEl").value)||0.15;
+    state.priceGas     = parseFloat(document.getElementById("priceGas").value)||0.076;
+    state.pricePellet  = parseFloat(document.getElementById("pricePellet").value)||0.065;
+    state.priceWoodM3  = parseFloat(document.getElementById("priceWoodM3").value)||120;
+
+    state.custName    = document.getElementById("custName").value.trim();
+    state.custAddr    = document.getElementById("custAddr").value.trim();
+    state.custContact = document.getElementById("custContact").value.trim();
+}
+
+// ----------------- FULL CALC + UI UPDATE -----------------
+function calcAllAndUpdateUI(){
+    // 1) objekt
+    calcStep1Object();
+
+    // 2) sustav
+    calcStep2System();
+
+    // 3) trošak i kupac
+    calcStep3CostsAndCustomer();
+
+    // preporučena snaga uređaja
+    const deviceAutoKW = deviceSizeKW(state.heatLoad_kW);
+
+    // ako deviceKWUser =0, upiši preporuku u polje
+    if(state.deviceKWUser===0){
+        state.deviceKWUser = deviceAutoKW;
+        document.getElementById("deviceKWInput").value = round(deviceAutoKW,1);
+    }
+
+    // emitter → default flowTemp ako se promijenio emitter
+    // (napomena: ne diramo flowTemp ako je user već ručno dirao,
+    // ali jednostavna varijanta: svaki put kad promijeniš emitter, postavi default)
+    // Ovdje ćemo to odraditi iz event listenera na emitteru (vidi dolje), da ne prepisujemo ručni unos stalno.
+
+    // vidljivost fieldova:
+    const isFloor = (state.emitter==="floor"||state.emitter==="mix");
+    const isRads  = (state.emitter==="rads" ||state.emitter==="mix");
+
+    document.getElementById("floorLoopsDiv").classList.toggle("hidden-input", !isFloor);
+    document.getElementById("pipeDiaDiv").classList.toggle("hidden-input", !isFloor);
     document.getElementById("floorLoopsBlock").classList.toggle("hidden-input", !isFloor);
 
     document.getElementById("radVolumeDiv").classList.toggle("hidden-input", !isRads);
     document.getElementById("radsTotalKWBlock").classList.toggle("hidden-input", !isRads);
 
-    // toplinsko opterećenje i dimenzioniranje uređaja
-    const heatLoadKW = baseCalc.heatLoad_kW;
-    const deviceKW   = deviceSizeKW(heatLoadKW);
+    // pufer samo za hp/pellet/wood
+    const needsBuffer = (state.heatSource==="hp"||state.heatSource==="pellet"||state.heatSource==="wood");
+    document.getElementById("bufferWrapper").classList.toggle("hidden-input", !needsBuffer);
+    document.getElementById("bufferInfoBlock").classList.toggle("hidden-input", !needsBuffer);
 
-    // volumen vode
-    const waterPerM  = getLitersPerMeter(pipeDia);
-    const floorVol   = isFloor ? floorLen * waterPerM : 0;
-    const radVol     = isRads  ? (radVolIn>0?radVolIn:estimateRadiatorVolume(baseCalc.area, emitter)) : 0;
-    // grubo ubacimo +10% za magistrale
-    const pipeVol    = (floorVol + radVol)*0.1;
-    const totalWater = floorVol + radVol + pipeVol;
+    // krugovi podnog → ako je 0, predloži
+    if(isFloor && state.floorLoopsInput===0){
+        const suggestedLoops = suggestFloorLoops(state.totalArea);
+        state.floorLoopsInput = suggestedLoops;
+        document.getElementById("floorLoopsInput").value = suggestedLoops;
+    }
 
-    // puferi
-    const puferMin_L   = rint(deviceKW * getMinBufferPerKW(heatSource,isFloor));
-    const puferStor_L  = rint(deviceKW * getStorageBufferPerKW(heatSource));
+    // radijatorski volumen ako user nije unio
+    const radVolEst = isRads
+        ? (state.radVolUser>0?state.radVolUser:estimateRadiatorVolume(state.totalArea, state.emitter))
+        : 0;
+
+    // volumen podnog grijanja = floorLoops * litersPerLoop(pipeDia)
+    const loopLiters = litersPerLoop(state.pipeDia);
+    const floorVol   = isFloor ? state.floorLoopsInput * loopLiters : 0;
+
+    // mali +10% magistrale
+    const pipeVol    = (floorVol + radVolEst)*0.1;
+
+    // total vode bez pufera i PTV spremnika
+    let totalWater = floorVol + radVolEst + pipeVol;
+
+    // dodaj pufer (ako treba)
+    let bufferMinPerKW = getMinBufferPerKW(state.heatSource, isFloor);
+    let bufferStorPerKW= getStorageBufferPerKW(state.heatSource);
+
+    const puferMin_L   = rint(state.deviceKWUser * bufferMinPerKW);
+    const puferStor_L  = rint(state.deviceKWUser * bufferStorPerKW);
+
+    let chosenBuffer = 0;
+    if(needsBuffer){
+        // ako korisnik još nije odabrao bufferTankVol, predloži najbliži veći
+        if(!state.bufferTankVol || state.bufferTankVol===0){
+            const suggestedBuf = chooseBufferSizeLiters(puferMin_L);
+            state.bufferTankVol = suggestedBuf;
+            document.getElementById("bufferTank").value = suggestedBuf.toString();
+        }
+        chosenBuffer = state.bufferTankVol;
+        totalWater += chosenBuffer;
+    }
+
+    // dodaj PTV volumen u sustav vode samo ako je PTV spojen na grijanje
+    const dhwTankVol  = state.dhwTankVol;
+    if(dhwTankVol>0 && state.dhwFromHeat==="yes"){
+        totalWater += dhwTankVol*0.6; // dio izmjenjivača/spojene vode, grubo
+    }
 
     // ekspanzija
-    const expansionLit = expansionVesselLiters(totalWater + dhwTankVol);
+    const expansionLit = expansionVesselLiters(totalWater);
 
-    // radijatori
-    const radFactor = radiatorFactor(flowTemp);
-    const totalRadsKW = isRads ? (heatLoadKW / radFactor) : 0;
+    // radijatori traže snagu
+    const radFactor = radiatorFactor(state.flowTemp);
+    const totalRadsKW = isRads ? (state.heatLoad_kW / radFactor) : 0;
 
     // podno krugovi
-    const loops = isFloor ? calcLoops(floorLen) : 0;
+    const loops = isFloor ? state.floorLoopsInput : 0;
 
-    // PTV
-    const ptvVolRec = dhwVolumeByPeople(baseCalc.numPeople);
-    // snaga za zagrijavanje spremnika -> ~80% snage uređaja
-    const dhwPowerNeeded = dhwFromHeat==="yes" ? deviceKW*0.8 : 0;
-    const dhwCoilA = dhwFromHeat==="yes" ? coilAreaFromPower(dhwPowerNeeded) : 0;
+    // PTV dimenzioniranje
+    const ptvVolRec = dhwVolumeByPeople(state.numPeople);
+    const dhwPowerNeeded = (state.dhwFromHeat==="yes") ? state.deviceKWUser*0.8 : 0;
+    const dhwCoilA = (state.dhwFromHeat==="yes") ? coilAreaFromPower(dhwPowerNeeded) : 0;
     const dhwHeater = electricHeaterKW(dhwTankVol);
 
-    // troškovi grijanja se računaju na godišnju toplinu prostora (baseCalc.annualHeatDemand)
-    const costs = costEstimatesFull(baseCalc.annualHeatDemand, dhwTankVol, dhwFromHeat);
+    // buffer efficiency factor
+    const bufEffFactor = bufferEfficiencyFactor(state.heatSource, needsBuffer && chosenBuffer>0);
+
+    // godišnji trošak po energentu
+    // hp
+    const hpCostObj    = costForSource(
+        state.annualHeatDemand,
+        dhwTankVol,
+        state.dhwFromHeat,
+        "hp",
+        state.flowTemp,
+        state.priceEl,
+        state.priceGas,
+        state.pricePellet,
+        state.priceWoodM3,
+        bufferEfficiencyFactor("hp", (state.heatSource==="hp" && needsBuffer && chosenBuffer>0))
+    );
+    // gas
+    const gasCostObj   = costForSource(
+        state.annualHeatDemand,
+        dhwTankVol,
+        state.dhwFromHeat,
+        "gas",
+        state.flowTemp,
+        state.priceEl,
+        state.priceGas,
+        state.pricePellet,
+        state.priceWoodM3,
+        bufferEfficiencyFactor("gas", false)
+    );
+    // pellet
+    const pelCostObj   = costForSource(
+        state.annualHeatDemand,
+        dhwTankVol,
+        state.dhwFromHeat,
+        "pellet",
+        state.flowTemp,
+        state.priceEl,
+        state.priceGas,
+        state.pricePellet,
+        state.priceWoodM3,
+        bufferEfficiencyFactor("pellet",(state.heatSource==="pellet" && needsBuffer && chosenBuffer>0))
+    );
+    // wood
+    const woodCostObj  = costForSource(
+        state.annualHeatDemand,
+        dhwTankVol,
+        state.dhwFromHeat,
+        "wood",
+        state.flowTemp,
+        state.priceEl,
+        state.priceGas,
+        state.pricePellet,
+        state.priceWoodM3,
+        bufferEfficiencyFactor("wood",(state.heatSource==="wood" && needsBuffer && chosenBuffer>0))
+    );
+    // electric
+    const elecCostObj  = costForSource(
+        state.annualHeatDemand,
+        dhwTankVol,
+        state.dhwFromHeat,
+        "elec",
+        state.flowTemp,
+        state.priceEl,
+        state.priceGas,
+        state.pricePellet,
+        state.priceWoodM3,
+        bufferEfficiencyFactor("elec",false)
+    );
+
+    // iz woodCostObj kWhInput izračunaj m3/god
+    const woodM3Year = woodCostObj.kWhInput/1800;
 
     // poruke upozorenja
     let warnMsg = "";
-    if(heatSource==="wood"){
+    if(state.heatSource==="wood"){
         warnMsg = "Kod drva: veliki akumulacijski pufer je obavezan (sigurnost i stabilnost)!";
-    } else if(heatSource==="hp" && isFloor && puferMin_L<120){
+    } else if(state.heatSource==="hp" && isFloor && puferMin_L<120){
         warnMsg = "Dizalica + podno: često je dosta tehnički pufer 100-200 L.";
     }
 
     // UPDATE UI desno
-    document.getElementById("heatLoadKW").textContent   = round(heatLoadKW,1);
-    document.getElementById("recHP").textContent        = round(deviceKW,1);
-    document.getElementById("recWood").textContent      = round(deviceKW,1);
-    document.getElementById("recPellet").textContent    = round(deviceKW,1);
-    document.getElementById("recGas").textContent       = round(deviceKW,1);
+    document.getElementById("heatLoadKW").textContent   = round(state.heatLoad_kW,1);
+    document.getElementById("recHP").textContent        = round(deviceAutoKW,1);
+    document.getElementById("recWood").textContent      = round(deviceAutoKW,1);
+    document.getElementById("recPellet").textContent    = round(deviceAutoKW,1);
+    document.getElementById("recGas").textContent       = round(deviceAutoKW,1);
+    document.getElementById("recElec").textContent      = round(deviceAutoKW,1);
 
     document.getElementById("waterVol").textContent     = rint(totalWater);
-    document.getElementById("puferMin").textContent     = puferMin_L;
-    document.getElementById("puferStorage").textContent = puferStor_L;
     document.getElementById("expansionLiters").textContent = rint(expansionLit);
 
     document.getElementById("floorLoops").textContent   = loops ? loops : "-";
     document.getElementById("radsTotalKW").textContent  = totalRadsKW ? round(totalRadsKW,1) : "-";
 
     document.getElementById("dhwVolRec").textContent    = ptvVolRec;
-    document.getElementById("dhwCoilArea").textContent  = dhwFromHeat==="yes" ? round(dhwCoilA,2) : "-";
+    document.getElementById("dhwCoilArea").textContent  = (state.dhwFromHeat==="yes" && dhwTankVol>0) ? round(dhwCoilA,2) : "-";
     document.getElementById("dhwHeaterKW").textContent  = dhwTankVol>0 ? dhwHeater : "-";
-    document.getElementById("dhwPeopleNote").textContent = `${baseCalc.numPeople} osoba`;
+    document.getElementById("dhwPeopleNote").textContent = `${state.numPeople} osoba`;
 
-    document.getElementById("yearHPkWh").textContent        = rint(costs.hpKWhEl);
-    document.getElementById("yearHPcost").textContent       = rint(costs.hpCost);
-    document.getElementById("yearGASKWh").textContent       = rint(costs.gasKWh);
-    document.getElementById("yearGAScost").textContent      = rint(costs.gasCost);
-    document.getElementById("yearPELLETkWh").textContent    = rint(costs.pelKWh);
-    document.getElementById("yearPELLETcost").textContent   = rint(costs.pelCost);
-    document.getElementById("yearWOODkWh").textContent      = rint(costs.woodKWh);
-    document.getElementById("yearWOODcost").textContent     = rint(costs.woodCost);
+    // pufer prikaz
+    document.getElementById("puferMinCalc").textContent = needsBuffer?puferMin_L:"-";
+    document.getElementById("puferChosen").textContent  = needsBuffer?chosenBuffer:"-";
+    document.getElementById("puferStorageTarget").textContent = (needsBuffer && puferStor_L>0)?puferStor_L:"-";
+
+    document.getElementById("yearHPkWh").textContent        = rint(hpCostObj.kWhInput);
+    document.getElementById("yearHPcost").textContent       = rint(hpCostObj.euroYear);
+    document.getElementById("yearGASKWh").textContent       = rint(gasCostObj.kWhInput);
+    document.getElementById("yearGAScost").textContent      = rint(gasCostObj.euroYear);
+    document.getElementById("yearPELLETkWh").textContent    = rint(pelCostObj.kWhInput);
+    document.getElementById("yearPELLETcost").textContent   = rint(pelCostObj.euroYear);
+    document.getElementById("yearWOODkWh").textContent      = rint(woodCostObj.kWhInput);
+    document.getElementById("yearWOODcost").textContent     = rint(woodCostObj.euroYear);
+    document.getElementById("yearELECKWh").textContent      = rint(elecCostObj.kWhInput);
+    document.getElementById("yearELECcost").textContent     = rint(elecCostObj.euroYear);
 
     document.getElementById("warnMsg").textContent = warnMsg;
 
-    // generate report text for print/PDF
+    // priprema podataka za report
     const insSel = document.getElementById("insulation");
     const insulLabel = insSel.options[insSel.selectedIndex].textContent.trim();
 
     const reportData = {
-        buildingType: baseCalc.buildingType,
-        area: baseCalc.area,
-        height: baseCalc.height,
-        insulationClass: baseCalc.insulation,
+        buildingType: state.buildingType,
+        totalArea: state.totalArea,
+        totalVolume: state.totalVolume,
+        insulationClass: state.insulation,
         insulLabel: insulLabel,
-        windows: baseCalc.windows,
-        roomTemp: baseCalc.roomTemp,
-        deltaT: baseCalc.deltaT,
-        annualHeatDemand: baseCalc.annualHeatDemand,
+        windows: state.windows,
+        roomTemp: state.roomTemp,
+        deltaT: state.deltaT,
+        annualHeatDemand: state.annualHeatDemand,
 
-        heatLoad_kW: heatLoadKW,
-        device_kW: deviceKW,
+        heatLoad_kW: state.heatLoad_kW,
+        deviceAutoKW: deviceAutoKW,
+        deviceKWUser: state.deviceKWUser,
 
-        emitter: emitter,
-        flowTemp: flowTemp,
-        floorLen: floorLen,
-        loops: loops,
+        emitter: state.emitter,
+        flowTemp: state.flowTemp,
+        floorLoops: loops,
         totalRadsKW: totalRadsKW,
 
         totalWaterVol: totalWater,
         expansionLiters: expansionLit,
         puferMin_L: puferMin_L,
         puferStor_L: puferStor_L,
+        bufferChosen: chosenBuffer,
+        showBuffer: needsBuffer,
 
-        numPeople: baseCalc.numPeople,
+        numPeople: state.numPeople,
         ptvVolRec: ptvVolRec,
         dhwTankVol: dhwTankVol,
-        dhwFromHeating: dhwFromHeat,
+        dhwFromHeating: state.dhwFromHeat,
         dhwCoilA: dhwCoilA,
         dhwHeater: dhwHeater,
 
-        // troškovi
-        annualCostHP: costs.hpCost,
-        annualCostGas: costs.gasCost,
-        annualCostPellet: costs.pelCost,
-        annualCostWood: costs.woodCost,
+        // troškovi godišnje
+        annualCostHP: hpCostObj.euroYear,
+        annualCostGas: gasCostObj.euroYear,
+        annualCostPellet: pelCostObj.euroYear,
+        annualCostWood: woodCostObj.euroYear,
+        annualCostElec: elecCostObj.euroYear,
 
-        hpKWhEl: costs.hpKWhEl,
-        woodM3Year: costs.woodM3,
+        hpKWhEl: hpCostObj.kWhInput,
+        gasKWh: gasCostObj.kWhInput,
+        pelKWh: pelCostObj.kWhInput,
+        woodM3Year: woodM3Year,
+        elecKWh: elecCostObj.kWhInput,
 
-        // PTV struja
-        ptvElKWh: costs.ptvElKWh,
-        ptvElCost: costs.ptvElCost,
+        ptvElKWh: hpCostObj.ptvDirectEl, // el. backup PTV
+        ptvElCost: hpCostObj.ptvDirectEl * state.priceEl,
 
-        heatSource: heatSource
+        heatSource: state.heatSource,
+
+        custName: state.custName,
+        custAddr: state.custAddr,
+        custContact: state.custContact,
+
+        priceEl: state.priceEl,
+        priceGas: state.priceGas,
+        pricePellet: state.pricePellet,
+        priceWoodM3: state.priceWoodM3
     };
 
+    // generiraj report text ali ga NE pokazuj odmah (samo se sprema u DOM, a vidljiv po printu)
     document.getElementById("clientReport").textContent = buildClientReport(reportData);
 }
 
-// INIT
-document.addEventListener("DOMContentLoaded",()=>{
-    const allInputs = document.querySelectorAll("input,select,textarea");
-    allInputs.forEach(el=>{
-        el.addEventListener("input", calcAllAndUpdateUI);
-        el.addEventListener("change", calcAllAndUpdateUI);
+// ----------------- DYNAMIC FLOORS UI -----------------
+function renderFloorsInputs(){
+    const cont = document.getElementById("floorsContainer");
+    cont.innerHTML = "";
+    const n = parseInt(document.getElementById("numFloors").value,10);
+    for(let i=1;i<=n;i++){
+        const wrap = document.createElement("div");
+        wrap.innerHTML = `
+            <label>Etaža ${i} - Grijana površina (m²)
+                <span class="hint">unutarnja</span>
+            </label>
+            <input type="number" id="floorArea_${i}" value="${i===1?150:80}" min="20" step="1">
+
+            <label style="margin-top:.75rem;">Etaža ${i} - Visina prostora (m)
+                <span class="hint">prosjek, default 2.6 m</span>
+            </label>
+            <input type="number" id="floorHeight_${i}" value="2.6" min="2" step="0.1">
+        `;
+        cont.appendChild(wrap);
+    }
+}
+
+// ----------------- DEVICE DB PARSER -----------------
+function parseDeviceDB(){
+    const raw = document.getElementById("deviceDBInput").value;
+    state.deviceDBRaw = raw;
+    const lines = raw.split(/\r?\n/).map(l=>l.trim()).filter(l=>l.length>0);
+    const out=[];
+    for(const line of lines){
+        const parts = line.split(";");
+        if(parts.length<2) continue;
+        const obj={
+            naziv:parts[0]||"",
+            tip:parts[1]||"",
+            snagaKW:parts[2]||"",
+            polazMin:parts[3]||"",
+            polazMax:parts[4]||"",
+            COP35:parts[5]||"",
+            COP55:parts[6]||"",
+            napomena:parts[7]||""
+        };
+        out.push(obj);
+    }
+    state.deviceDBParsed = out;
+    renderDeviceDBTable();
+}
+
+function renderDeviceDBTable(){
+    const filterVal = (document.getElementById("deviceDBFilter").value||"").toLowerCase();
+    state.deviceDBFilter = filterVal;
+    const tbody = document.getElementById("deviceDBTbody");
+    tbody.innerHTML = "";
+    const rows = state.deviceDBParsed.filter(r=>{
+        if(!filterVal) return true;
+        return (
+            r.naziv.toLowerCase().includes(filterVal) ||
+            r.tip.toLowerCase().includes(filterVal) ||
+            r.snagaKW.toLowerCase().includes(filterVal) ||
+            r.napomena.toLowerCase().includes(filterVal)
+        );
     });
 
-    calcAllAndUpdateUI();
+    if(rows.length===0){
+        const tr=document.createElement("tr");
+        tr.innerHTML=`<td colspan="7" style="color:var(--text-dim);padding:.75rem;">Nema rezultata.</td>`;
+        tbody.appendChild(tr);
+        return;
+    }
 
-    // REGISTER SERVICE WORKER FOR PWA
+    for(const r of rows){
+        const tr=document.createElement("tr");
+        tr.innerHTML=`
+            <td><strong>${r.naziv}</strong></td>
+            <td>${r.tip}</td>
+            <td>${r.snagaKW}</td>
+            <td>${r.polazMin}–${r.polazMax}</td>
+            <td>${r.COP35}</td>
+            <td>${r.COP55}</td>
+            <td>${r.napomena}</td>
+        `;
+        tbody.appendChild(tr);
+    }
+}
+
+// ----------------- NAVIGATION / SPLASH -----------------
+function showCalculator(){
+    // sakri splash
+    document.getElementById("splash").classList.add("hide");
+    // pokaži navbar
+    document.getElementById("tabBar").classList.remove("hidden-input");
+    // aktiviraj kalkulator
+    document.getElementById("calcWrapper").classList.remove("hidden-input");
+    document.getElementById("calcWrapper").style.opacity=1;
+    document.getElementById("deviceDBWrapper").classList.add("hidden-input");
+    document.getElementById("deviceDBWrapper").style.opacity=0;
+
+    document.getElementById("btnCalcTab").classList.add("active");
+    document.getElementById("btnDBTab").classList.remove("active");
+}
+
+function showDB(){
+    document.getElementById("splash").classList.add("hide");
+    document.getElementById("tabBar").classList.remove("hidden-input");
+    document.getElementById("deviceDBWrapper").classList.remove("hidden-input");
+    document.getElementById("deviceDBWrapper").style.opacity=1;
+    document.getElementById("calcWrapper").classList.add("hidden-input");
+    document.getElementById("calcWrapper").style.opacity=0;
+
+    document.getElementById("btnDBTab").classList.add("active");
+    document.getElementById("btnCalcTab").classList.remove("active");
+}
+
+// ----------------- EVENT LISTENERS -----------------
+document.addEventListener("DOMContentLoaded",()=>{
+    // init floors UI
+    renderFloorsInputs();
+
+    // listeners za splash gumbe
+    document.getElementById("enterCalculatorBtn").addEventListener("click", ()=>{
+        showCalculator();
+        calcAllAndUpdateUI();
+    });
+    document.getElementById("enterDBBtn").addEventListener("click", ()=>{
+        showDB();
+        parseDeviceDB();
+    });
+
+    // navbar buttons
+    document.getElementById("btnCalcTab").addEventListener("click", ()=>{
+        showCalculator();
+        calcAllAndUpdateUI();
+    });
+    document.getElementById("btnDBTab").addEventListener("click", ()=>{
+        showDB();
+        parseDeviceDB();
+    });
+
+    // promjena broja etaža -> regeneriraj polja
+    document.getElementById("numFloors").addEventListener("change", ()=>{
+        renderFloorsInputs();
+        // nakon re-rendera moramo opet dodati event listenere na nova polja
+        hookupAllInputsAgain();
+        calcAllAndUpdateUI();
+    });
+
+    // pdf/print
+    document.getElementById("pdfExportBtn").addEventListener("click", ()=>{
+        // prije printa samo refresh reporta da bude friško
+        calcAllAndUpdateUI();
+        window.print();
+    });
+
+    // baza uređaja unos
+    document.getElementById("deviceDBInput").addEventListener("input", ()=>{
+        parseDeviceDB();
+    });
+    document.getElementById("deviceDBFilter").addEventListener("input", ()=>{
+        renderDeviceDBTable();
+    });
+
+    // auto-flowTemp po tipu emitera
+    document.getElementById("emitter").addEventListener("change", ()=>{
+        const newT = defaultFlowTempForEmitter(document.getElementById("emitter").value);
+        document.getElementById("flowTemp").value = newT;
+        calcAllAndUpdateUI();
+    });
+
+    // kad se promijeni heatSource i treba pufer → ako nema ručno odabranog, auto izračunaj
+    document.getElementById("heatSource").addEventListener("change", ()=>{
+        calcAllAndUpdateUI();
+    });
+
+    // generički listeneri za sve inpute/selicte:
+    hookupAllInputsAgain();
+
+    // REGISTER SERVICE WORKER FOR PWA (fail safe no-op catch)
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
     }
 });
+
+function hookupAllInputsAgain(){
+    const allInputs = document.querySelectorAll("input,select,textarea");
+    allInputs.forEach(el=>{
+        if(el.id==="numFloors") return; // već ima svoj
+        if(el.id==="deviceDBInput") return; // ima svoj
+        if(el.id==="deviceDBFilter") return; // ima svoj
+        if(el.id==="emitter") return; // već gore
+        if(el.id==="heatSource") return; // već gore
+        if(el.id==="pdfExportBtn") return;
+        el.addEventListener("input", calcAllAndUpdateUI);
+        el.addEventListener("change", calcAllAndUpdateUI);
+    });
+}
 </script>
 </body>
 </html>
